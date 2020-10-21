@@ -1,0 +1,5 @@
+.idea
+.ropeproject
+*.swp
+
+front/node_modules

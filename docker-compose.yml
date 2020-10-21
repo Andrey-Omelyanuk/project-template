@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+
+  front:
+    build: 
+      context: ./front  # where we should find dockerfile
+      target : dev
+    volumes:
+      - ./front:/app
+    ports:
+      - 3000:3000
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    entrypoint: ["sh", "-c", "npm install && npm run start"]
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  back:
+    build:
+      context: ./back
+      target: dev
+    depends_on:
+      - db 
+    volumes:
+      - ./back:/app
+    ports:
+      - 8000:8000
+    entrypoint: ["sh", "-c", "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"]
+
+  db:
+    image: postgres:12.0-alpine
+    environment:
+      - POSTGRES_USER=project-template
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=project-template
