@@ -3,3 +3,5 @@
 *.swp
 
 front/node_modules
+
+*.pyc
