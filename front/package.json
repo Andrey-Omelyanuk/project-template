@@ -14,6 +14,7 @@
     "@types/react-dom": "^16.9.0",
     "mobx": "^6.0.1",
     "mobx-react": "^7.0.0",
+    "mobx-orm": "git+https://github.com/Andrey-Omelyanuk/mobx-orm.git#v0.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",

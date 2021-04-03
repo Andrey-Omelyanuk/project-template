@@ -1,4 +1,6 @@
-FROM node:12-alpine as dev 
+# TODO: we need the base 
+FROM node:14-alpine as dev 
+RUN apk add --no-cache git
 WORKDIR /app
 
 FROM dev as build
