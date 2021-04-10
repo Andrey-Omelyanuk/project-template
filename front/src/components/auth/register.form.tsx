@@ -23,7 +23,7 @@ const styles = (theme) => ({
 
 
 @observer
-class SignIn extends React.Component<any> {
+class RegisterForm extends React.Component<any> {
   render() {
     const { classes } = this.props;
     return (
@@ -31,7 +31,7 @@ class SignIn extends React.Component<any> {
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5"> Sign in </Typography>
+          <Typography component="h1" variant="h5"> Register  </Typography>
 
           <form className={classes.form} noValidate>
             <TextField 
@@ -45,7 +45,7 @@ class SignIn extends React.Component<any> {
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
 
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
-              Sign Up 
+              Sign In
             </Button>
 
             <Grid container>
@@ -66,4 +66,4 @@ class SignIn extends React.Component<any> {
   }
 }
 
-export default withStyles(styles)(SignIn)
+export default withStyles(styles)(RegisterForm)

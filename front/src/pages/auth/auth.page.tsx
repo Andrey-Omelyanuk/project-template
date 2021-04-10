@@ -1,10 +1,12 @@
 import React from 'react'
+import { RouteComponentProps, Redirect } from 'react-router'
 import { observer } from 'mobx-react'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import PageComponent from '../page.component'
+import { Switch, Route, withRouter } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
-import SignIn from 'src/components/auth/sign-in'
+import LoginPage from './login.page'
+import RegisterPage from './register.page'
+import auth from 'src/services/auth'
 
 
 const styles = (theme) => ({
@@ -19,22 +21,27 @@ const styles = (theme) => ({
 
 
 @observer
-class AuthPage extends PageComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <Container className={classes.root}>
-        <Switch>
-          <Route path="/sign-in">
-            <SignIn></SignIn>
-          </Route>
-          <Route path="/sign-up">
-            <SignIn></SignIn>
-          </Route>
-        </Switch>
-      </Container>
-    )
-  }
+class AuthPage extends React.Component<RouteComponentProps> {
+    render() {
+        if (auth.is_authenticated)
+            return (<Redirect to="/"/>)
+
+        const path = this.props.match.path 
+        const { classes } = this.props;
+        return (
+
+            <Container className={classes.root}>
+                <Switch>
+                    <Route path={`${path}/login`}>
+                        <LoginPage/>
+                    </Route>
+                    <Route path={`${path}/register`}>
+                        <RegisterPage/>
+                    </Route>
+                </Switch>
+            </Container>
+        )
+    }
 }
 
-export default withStyles(styles)(AuthPage)
+export default withRouter(withStyles(styles)(AuthPage))

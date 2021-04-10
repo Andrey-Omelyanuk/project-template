@@ -10,6 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Checkbox from '@material-ui/core/Checkbox';
+import auth from 'src/services/auth'
 
 
 const styles = (theme) => ({
@@ -23,7 +24,12 @@ const styles = (theme) => ({
 
 
 @observer
-class SignIn extends React.Component<any> {
+class LoginForm extends React.Component<any> {
+
+  login() {
+    auth.login()
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -44,8 +50,8 @@ class SignIn extends React.Component<any> {
 
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
 
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
-              Sign In
+            <Button onClick={this.login} type="submit" fullWidth variant="contained" color="primary" className={classes.submit} >
+              Login
             </Button>
 
             <Grid container>
@@ -66,4 +72,4 @@ class SignIn extends React.Component<any> {
   }
 }
 
-export default withStyles(styles)(SignIn)
+export default withStyles(styles)(LoginForm)

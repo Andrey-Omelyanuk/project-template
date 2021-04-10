@@ -1,29 +1,42 @@
-import { observable, computed, action } from 'mobx'
+import { makeObservable, observable, computed, action } from 'mobx'
 import settings from './settings'
 
 
 class Auth {
+    @observable is_ready: boolean = false
+    @observable private token: string = ''
 
-    @computed get is_authenticated() : boolean { return false }
-    @computed get user_id() : boolean { return false }
-
-    @action
-    login() {}
-
-    @action
-    logout() {}
-
-    @action
-    register() {}
-
-    @action
-    confirm() { 
+    @computed get user_id           (): number  { return 1 }
+    @computed get is_authenticated  (): boolean { return !!this.token }
+    @computed get access_token      (): string  { return this.token }
+    @computed get access_token_exp  (): Date    { 
+        // TODO: get exp date from token
+        return new Date() 
+    }
+    constructor() {
+        makeObservable(this)
+        var access_token = localStorage.getItem('access_token')
+        if (access_token === "null")
+            access_token = ''
+        this.setToken(access_token)
+    }
+    @action private setToken(token) {
+        this.is_ready = true // first set token == auth is ready to use
+        this.token = token
+        localStorage.setItem('access_token', token)
     }
 
-    @action
-    refreshToken() {}
+    async login() {
+        this.setToken('test')
+    }
 
-    // private 
+    async logout() {
+        this.setToken('')
+    }
+
+    async register() {}
+    async confirm() {}
+    async refreshToken() {}
 }
 
 const auth = new Auth()

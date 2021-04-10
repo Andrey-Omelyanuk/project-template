@@ -1,36 +1,31 @@
-declare let process: any
+import { makeObservable, observable } from 'mobx'
+import http from './http'
 
 
 class Settings {
-    ready : Promise<any>
+    static readonly SETTINGS_URL = '/api/settings.json'
+    
+    @observable is_ready: boolean = false
 
-    private _SETTINGS   : string    = process.env.SETTINGS  ? process.env.SETTINGS  : '/settings.json'
-    private _API        : string    = process.env.API_URI   ? process.env.API_URI   : '/api'
-    private _DEBUG      : boolean   = process.env.DEBUG     ? process.env.DEBUG     : true 
-
-    get API     () : string { return this._API       }
-    get DEBUG   () : boolean { return this._DEBUG     }
+    DEBUG   : boolean = true
+    API     : string  = '/api'
 
     constructor() {
-        this.ready = new Promise((resolve, reject) => {
-            // get settings from backend
-            let xhr = new XMLHttpRequest()
-            xhr.open('GET', `${this._SETTINGS}`)
-            xhr.setRequestHeader('Content-Type', 'application/json')
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState !==   4) return
-                if (xhr.status     !== 200) 
-                    // ignor errors
-                    // reject(xhr.status + ': ' + xhr.statusText)
-                    resolve(this)
-                else {
-                    let res = JSON.parse(xhr.responseText)
-                    this._DEBUG = res.DEBUG ? res.DEBUG : false
-                    resolve(this)
-                }
-            }
-            xhr.send()
-        })
+        makeObservable(this)
+        this.loadSettings()
+    }
+
+    async loadSettings() {
+        try {
+           var settings = await http.get(Settings.SETTINGS_URL) 
+           for(let name in settings) {
+               this[name] = settings[name]
+           }
+        } 
+        catch (e) {
+            // ignore and use by default settings
+        }
+        this.is_ready = true
     }
 }
 
