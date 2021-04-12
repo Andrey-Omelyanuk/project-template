@@ -25,7 +25,7 @@ services:
       - 3000:3000
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-    entrypoint: ["sh", "-c", "npm install && npm run start"]
+    entrypoint: ["sh", "-c", "yarn install && yarn start"]
     # entrypoint: ["sh", "-c", "pm install && npm audit fix && npm run start"]
     # entrypoint: ["sh", "-c", "npm run start"]
     environment:

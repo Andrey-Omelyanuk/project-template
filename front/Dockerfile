@@ -5,9 +5,9 @@ WORKDIR /app
 
 FROM dev as build
 COPY package.json /app/package.json
-RUN npm install --only=prod
+RUN yarn install --only=prod
 COPY . /app
-RUN npm run build
+RUN yarn build
 
 FROM nginx:1.16.0-alpine as prod
 COPY --from=build /app/build /usr/share/nginx/html
