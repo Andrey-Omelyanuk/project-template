@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import settings from 'src/services/settings'
 import auth from 'src/services/auth'
+import PersistentDrawerRight from "./components/panel";
 
 const styles = (theme) => ({
     // all auth things should be in the center 
@@ -22,12 +23,7 @@ class MainPage extends React.Component<RouteComponentProps> {
         const { classes } = this.props;
         return (
             <Container className={classes.root}>
-                <div>This is the main page</div>
-                <div>{`DEBUG: ${settings.DEBUG}`}</div>
-                <div>{`API: ${settings.API}`}</div>
-                <div>{`Auth is authenticated : ${auth.is_authenticated}`}</div>
-                <div>{`Token : ${auth.access_token}`}</div>
-
+               <PersistentDrawerRight/>
             </Container>
         )
     }
