@@ -1,7 +1,5 @@
 version: '3.4'
-
 services:
-
   # api:
   #   image: nginx:latest
   #   volumes:
@@ -15,23 +13,50 @@ services:
   # async:
   #   image: centrifugo/centrifugo:v2.8
 
-  front:
-    build: 
-      context: ./front  # where we should find dockerfile
-      target : dev
-    volumes:
-      - ./front:/app
-    ports:
-      - 3000:3000
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    entrypoint: ["sh", "-c", "yarn install && yarn start"]
-    # entrypoint: ["sh", "-c", "pm install && npm audit fix && npm run start"]
-    # entrypoint: ["sh", "-c", "npm run start"]
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+  # front:
+  #   build: 
+  #     context: ./front  # where we should find dockerfile
+  #     target : dev
+  #   volumes:
+  #     - ./front:/app
+  #   ports:
+  #     - 3000:3000
+  #   stdin_open: true # docker run -i
+  #   tty: true        # docker run -t
+  #   entrypoint: ["sh", "-c", "yarn install && yarn start"]
+  #   # entrypoint: ["sh", "-c", "pm install && npm audit fix && npm run start"]
+  #   # entrypoint: ["sh", "-c", "npm run start"]
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
 
-  # back:
+  back:
+    build:
+      context: ./back
+      target: dev
+    depends_on:
+      - db 
+    volumes:
+      - ./back:/app
+    ports:
+      - 8000:8000
+    entrypoint: [
+      "sh", "-c", 
+      "pip install -r requirements.txt && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      ]
+  
+  worker:
+    build: 
+      context : ./back
+      target  : dev 
+    depends_on: 
+      - db
+      - back
+      - rabbitmq
+    volumes:
+      - ./back:/app
+    command: sh -c "pip install -r requirements.txt && celery -A main worker -l info"
+   
+  # beat:
   #   build:
   #     context: ./back
   #     target: dev
@@ -40,12 +65,19 @@ services:
   #   volumes:
   #     - ./back:/app
   #   ports:
-  #     - 8000:8000
-  #   entrypoint: ["sh", "-c", "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"]
+  #     - 8001:8001
+  #   entrypoint: [ "sh", "-c", "pip install -r requirements.txt && celery worker -A main -l info --concurrency=2" ]
 
-  # db:
-  #   image: postgres:12.0-alpine
-  #   environment:
-  #     - POSTGRES_USER=project-template
-  #     - POSTGRES_PASSWORD=123456
-  #     - POSTGRES_DB=project-template
+  db:
+    image: postgres:12.0-alpine
+    environment:
+      - POSTGRES_USER=project-template
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=project-template
+
+  rabbitmq:
+    image: rabbitmq:3.8-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=andrey
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_VHOST=main

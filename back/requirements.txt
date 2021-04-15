@@ -2,10 +2,11 @@
 # Base
 # -------------------------------------------------------------------------------------------------
 psycopg2                == 2.8.5    # Python-PostgreSQL Database Adapter
+celery[librabbitmq]     == 5.0.5    # Distributed Task Queue.
 
 # -------------------------------------------------------------------------------------------------
 # Django
 # -------------------------------------------------------------------------------------------------
-Django                  == 2.2      #
-djangorestframework==3.11.0
-
+Django                          == 3.2      #
+djangorestframework             == 3.12.4   # Web APIs for Django, made easy.
+djangorestframework-simplejwt   == 4.6.0    # 
