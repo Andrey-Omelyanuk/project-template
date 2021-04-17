@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'rest_framework',
+    'apps.spiders',
 ]
 
 MIDDLEWARE = [
