@@ -1,12 +1,14 @@
 version: '3.4'
 services:
+  # docker ps -a | grep Removal | cut -f1 -d' ' | xargs -rt docker rm  2>&1 >/dev/null | grep "dataset does not exist" |  awk '{print $(NF-4)}' | sed "s/'//g" | cut -f1 -d':' |  xargs -L1 sh -c 'for arg do sudo zfs destroy -R "$arg"; sudo zfs destroy -R "$arg"-init ; sudo zfs create "$arg" ; sudo zfs create "$arg"-init ; ...; done' _ ; docker ps -a | grep Removal | cut -f1 -d' ' | xargs -rt docker rm 2>&1 >/dev/null
+
   # api:
-  #   image: nginx:latest
+  #   image: nginx:1.12-alpine
   #   volumes:
   #     - ./docker-compose.nginx.conf:/etc/nginx/nginx.conf:ro
   #   depends_on:
   #     - front
-  #     # - back 
+  #     - back 
   #   ports:
   #     - "8050:8050"
 
@@ -24,8 +26,6 @@ services:
   #   stdin_open: true # docker run -i
   #   tty: true        # docker run -t
   #   entrypoint: ["sh", "-c", "yarn install && yarn start"]
-  #   # entrypoint: ["sh", "-c", "pm install && npm audit fix && npm run start"]
-  #   # entrypoint: ["sh", "-c", "npm run start"]
   #   environment:
   #     - CHOKIDAR_USEPOLLING=true
 
@@ -68,6 +68,18 @@ services:
   #     - 8001:8001
   #   entrypoint: [ "sh", "-c", "pip install -r requirements.txt && celery worker -A main -l info --concurrency=2" ]
 
+  # flower:  
+  #   command: sh -c "pip install -r requirements.txt && celery -A main flower --port=8888"
+  #   depends_on: 
+  #     - rabbitmq
+  #   build: 
+  #     context : ./back
+  #     target  : dev 
+  #   ports:  
+  #     - 8888:8888 
+  #   volumes:
+  #     - ./back:/app
+
   db:
     image: postgres:12.0-alpine
     environment:
@@ -81,3 +93,4 @@ services:
       - RABBITMQ_DEFAULT_USER=andrey
       - RABBITMQ_DEFAULT_PASS=123456
       - RABBITMQ_DEFAULT_VHOST=main
+

@@ -2,11 +2,25 @@
 # Base
 # -------------------------------------------------------------------------------------------------
 psycopg2                == 2.8.5    # Python-PostgreSQL Database Adapter
-celery[librabbitmq]     == 5.0.5    # Distributed Task Queue.
-
+celery[librabbitmq]     == 4.4.7    # Distributed Task Queue.
+flower                  == 0.9.7    # Flower is a web based tool for monitoring and administrating Celery clusters.
 # -------------------------------------------------------------------------------------------------
 # Django
 # -------------------------------------------------------------------------------------------------
 Django                          == 3.2      #
+django-mptt                     == 0.12.0   # MPTT is a technique for storing hierarchical data in a database. The aim is to make retrieval operations very efficient.
 djangorestframework             == 3.12.4   # Web APIs for Django, made easy.
 djangorestframework-simplejwt   == 4.6.0    # 
+django-celery-results           == 2.0.1    # This extension enables you to store Celery task results using the Django ORM.
+django-celery-beat              == 2.2.0    # Database-backed Periodic Tasks.
+# -------------------------------------------------------------------------------------------------
+# Scrapy and dependencies
+# https://doc.scrapy.org/en/latest/intro/install.html#things-that-are-good-to-know
+# -------------------------------------------------------------------------------------------------
+Scrapy              == 2.5.0        # A high-level Python Screen Scraping framework.
+lxml                == 4.6.3        # Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.
+parsel              == 1.6.0        # Parsel is a library to extract data from HTML and XML using XPath and CSS selectors
+w3lib               == 1.22.0       # Library of web-related functions.
+Twisted             == 21.2.0       # Twisted is an event-driven networking engine for Python.
+cryptography        == 3.4.7        # cryptography is a package which provides cryptographic recipes and primitives to Python developers.
+pyOpenSSL           == 20.0.1       # Python wrapper module around the OpenSSL library.
