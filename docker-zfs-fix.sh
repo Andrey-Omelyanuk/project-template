@@ -7,3 +7,7 @@ for container_id in $(docker container ls -qa --filter status=removing); do
         zfs create "${zpool_object}-init"
         docker container rm $container_id
 done
+# or 
+# Stop docker service
+# Remove /var/lib/docker
+# Start docker service again

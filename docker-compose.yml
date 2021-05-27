@@ -1,6 +1,5 @@
 version: '3.4'
 services:
-  # docker ps -a | grep Removal | cut -f1 -d' ' | xargs -rt docker rm  2>&1 >/dev/null | grep "dataset does not exist" |  awk '{print $(NF-4)}' | sed "s/'//g" | cut -f1 -d':' |  xargs -L1 sh -c 'for arg do sudo zfs destroy -R "$arg"; sudo zfs destroy -R "$arg"-init ; sudo zfs create "$arg" ; sudo zfs create "$arg"-init ; ...; done' _ ; docker ps -a | grep Removal | cut -f1 -d' ' | xargs -rt docker rm 2>&1 >/dev/null
 
   # api:
   #   image: nginx:1.12-alpine
@@ -15,46 +14,46 @@ services:
   # async:
   #   image: centrifugo/centrifugo:v2.8
 
-  # front:
-  #   build: 
-  #     context: ./front  # where we should find dockerfile
-  #     target : dev
-  #   volumes:
-  #     - ./front:/app
-  #   ports:
-  #     - 3000:3000
-  #   stdin_open: true # docker run -i
-  #   tty: true        # docker run -t
-  #   entrypoint: ["sh", "-c", "yarn install && yarn start"]
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-
-  back:
-    build:
-      context: ./back
-      target: dev
-    depends_on:
-      - db 
-    volumes:
-      - ./back:/app
-    ports:
-      - 8000:8000
-    entrypoint: [
-      "sh", "-c", 
-      "pip install -r requirements.txt && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-      ]
-  
-  worker:
+  front:
     build: 
-      context : ./back
-      target  : dev 
-    depends_on: 
-      - db
-      - back
-      - rabbitmq
+      context: ./front  # where we should find dockerfile
+      target : dev
     volumes:
-      - ./back:/app
-    command: sh -c "pip install -r requirements.txt && celery -A main worker -l info"
+      - ./front:/app
+    ports:
+      - 3000:3000
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    entrypoint: ["sh", "-c", "yarn install && yarn start"]
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  # back:
+  #   build:
+  #     context: ./back
+  #     target: dev
+  #   depends_on:
+  #     - db 
+  #   volumes:
+  #     - ./back:/app
+  #   ports:
+  #     - 8000:8000
+  #   entrypoint: [
+  #     "sh", "-c", 
+  #     "pip install -r requirements.txt && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  #     ]
+  
+  # worker:
+  #   build: 
+  #     context : ./back
+  #     target  : dev 
+  #   depends_on: 
+  #     - db
+  #     - back
+  #     - rabbitmq
+  #   volumes:
+  #     - ./back:/app
+  #   command: sh -c "pip install -r requirements.txt && celery -A main worker -l info"
    
   # beat:
   #   build:
@@ -80,17 +79,17 @@ services:
   #   volumes:
   #     - ./back:/app
 
-  db:
-    image: postgres:12.0-alpine
-    environment:
-      - POSTGRES_USER=project-template
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=project-template
+  # db:
+  #   image: postgres:12.0-alpine
+  #   environment:
+  #     - POSTGRES_USER=project-template
+  #     - POSTGRES_PASSWORD=123456
+  #     - POSTGRES_DB=project-template
 
-  rabbitmq:
-    image: rabbitmq:3.8-alpine
-    environment:
-      - RABBITMQ_DEFAULT_USER=andrey
-      - RABBITMQ_DEFAULT_PASS=123456
-      - RABBITMQ_DEFAULT_VHOST=main
+  # rabbitmq:
+  #   image: rabbitmq:3.8-alpine
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=andrey
+  #     - RABBITMQ_DEFAULT_PASS=123456
+  #     - RABBITMQ_DEFAULT_VHOST=main
 

@@ -4,6 +4,7 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline'
 import AuthPage from './auth/auth.page'
 import MainPage from './main/main.page'
 import settings from 'src/services/settings'
@@ -21,9 +22,10 @@ class RootPage extends React.Component<RouteComponentProps> {
     @computed get is_ready(): boolean { return settings.is_ready && auth.is_ready } 
 
     render() {
-        if (this.is_ready) {
+        if (this.is_ready)
             return(
                 <Router>
+                    <CssBaseline />
                     <Switch>
                         <Route path="/about">
                             <div>About</div>
@@ -33,12 +35,10 @@ class RootPage extends React.Component<RouteComponentProps> {
                     </Switch>
                 </Router>
             )
-        }
-        else {
+        else 
             return(
                 <CircularProgress color="secondary" />
             )
-        }
     }
 }
 export default withStyles(styles)(RootPage)
