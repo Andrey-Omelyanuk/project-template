@@ -25,3 +25,44 @@ class Session(Model):
 def run_spider_if_session_was_created(sender, instance, created, **kwargs):
     if (created):
         run_spider.delay(instance.id)
+
+
+class Site(Model):
+    url         = CharField     (max_length=256, unique=True)
+    desc        = TextField     (default='')
+
+    def __str__(self):
+        return self.url 
+
+
+class Page(Model):
+    site        = ForeignKey    (Site, on_delete=CASCADE)
+    url         = CharField     (max_length=512, unique=True,   help_text='Url without domain. You can find domain in site.url .')
+    last_visit  = DateTimeField (                               help_text='When spider was on the page in last time.')
+
+    def __str__(self):
+        return "%s%s"%(self.site.url, self.url)
+
+
+class Article(Model):
+    site        = ForeignKey    (Site, on_delete=CASCADE)
+    idx         = CharField     (max_length=256,    help_text='ID or Slug.')
+    last_updated= DateTimeField (                   help_text='Datetime from ArticleSnapshot.timestamp')
+    title       = CharField     (default=''  , blank=True, max_length=256, help_text='Title.')
+    body        = JSONField     (default=dict, help_text='Desc  that was scriped from page.')
+    publish_date= DateTimeField (                   help_text='')
+
+    class Meta:
+        unique_together = (("site", "idx"),)
+
+class ArticleSnapshot(Model):
+    session     = ForeignKey    (Session, on_delete=CASCADE)
+    page        = ForeignKey    (Page   , on_delete=CASCADE)
+    article     = ForeignKey    (Article, on_delete=CASCADE)
+    timestamp   = DateTimeField (                   help_text='Datetime when data was read from page.')
+    title       = CharField     (default='', blank=True, max_length=256, help_text='Title.')
+    body        = JSONField     (default=dict,      help_text='Desc  that was scriped from page.')
+    publish_date= DateTimeField (                   help_text='')
+
+    class Meta:
+        unique_together = (("session", "page", "article"),)

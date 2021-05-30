@@ -3,5 +3,7 @@
 *.swp
 
 front/node_modules
+back/data/*.json
+back/data/*.log
 
 *.pyc
