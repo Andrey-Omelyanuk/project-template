@@ -7,7 +7,7 @@
     "@material-ui/icons": "~4.11.2", 
     "axios": "~0.21.1", 
     "mobx": "~6.2.0",
-    "mobx-orm": "git+https://github.com/Andrey-Omelyanuk/mobx-orm.git#v0.2.0",
+    "mobx-orm": "git+https://github.com/Andrey-Omelyanuk/mobx-orm.git#1.0.0-beta2",
     "mobx-react": "~7.1.0", 
     "react": "~17.0.2", 
     "react-dom": "~17.0.2", 

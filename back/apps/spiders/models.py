@@ -55,6 +55,7 @@ class Article(Model):
     class Meta:
         unique_together = (("site", "idx"),)
 
+
 class ArticleSnapshot(Model):
     session     = ForeignKey    (Session, on_delete=CASCADE)
     page        = ForeignKey    (Page   , on_delete=CASCADE)
