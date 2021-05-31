@@ -1,9 +1,6 @@
 import pytz
-import scrapy
 from scrapy.spiders         import CrawlSpider, Rule
 from scrapy.linkextractors  import LinkExtractor
-from django.conf            import settings
-from django.utils           import timezone
 from datetime               import datetime
 from urllib.parse           import urlparse
 from .items import Article 
@@ -15,7 +12,7 @@ class Spider(CrawlSpider):
     allowed_domains = ["zarya.by"]
     start_urls = [ "https://zarya.by/category/news/" ]
     rules = (
-		Rule(LinkExtractor(allow=[r'https:\/\/zarya.by\/news\/\S+'])),
+      Rule(LinkExtractor(allow=[r'https:\/\/zarya.by\/news\/lenta-novostej\/\S+'], restrict_css=['.newsFeedList', ]), 'parse'),
     )
 
     def parse(self, response):
@@ -30,4 +27,4 @@ class Spider(CrawlSpider):
         article['body']         = response.css('.shareText::text').get()
         article['publish_date'] = response.css('.shareText_publish::text').get()
 
-        yield article 
+        return article 
