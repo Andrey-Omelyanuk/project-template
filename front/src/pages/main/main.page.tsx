@@ -24,6 +24,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import settings from 'src/services/settings'
 import auth from 'src/services/auth'
@@ -32,6 +33,7 @@ import ScannersPage from './scanners.page'
 import SourcesPage from './sources.page'
 import TrendsPage from './trends.page'
 import DashboardPage from './dashboard.page'
+import { computed, observable } from 'mobx';
 
 
 const drawerWidth = 240;
@@ -71,6 +73,15 @@ const styles = (theme) => ({
 @observer
 class MainPage extends React.Component<RouteComponentProps> {
 
+    @observable is_ready: boolean  = false
+
+    constructor(props) {
+        super(props)
+        this.is_ready = true 
+        setTimeout(() => {
+            this.is_ready = true
+        }, 2000)
+    }
 
     render() {
         if (!auth.is_authenticated)
@@ -80,6 +91,14 @@ class MainPage extends React.Component<RouteComponentProps> {
         const { path, url } = this.props.match;
         const goToDashboard = () => {
             this.props.history.push(`/`);
+        }
+
+        if (!this.is_ready) {
+            return (
+                <React.Fragment>
+                    <CircularProgress color="secondary" />
+                </React.Fragment>
+            )
         }
 
         return (

@@ -8,6 +8,9 @@ for container_id in $(docker container ls -qa --filter status=removing); do
         docker container rm $container_id
 done
 # or 
-# Stop docker service
-# Remove /var/lib/docker
-# Start docker service again
+# docker stop $(docker ps -a -q)
+# docker rm $(docker ps -a -q)
+# docker rmi $(docker images -q)
+# sudo service docker stop
+# sudo rm -R /var/lib/docker
+# sudo service docker start 
