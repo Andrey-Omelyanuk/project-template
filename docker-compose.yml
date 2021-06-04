@@ -34,6 +34,7 @@ services:
       target: dev
     depends_on:
       - db 
+      - worker
     volumes:
       - ./back:/app
     ports:
@@ -49,7 +50,6 @@ services:
       target  : dev 
     depends_on: 
       - db
-      - back
       - rabbitmq
     volumes:
       - ./back:/app

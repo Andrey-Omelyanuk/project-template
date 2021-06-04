@@ -1,8 +1,10 @@
+from celery import chain
 from django.db.models import Model, CASCADE, ForeignKey, CharField, TextField, DateTimeField, BooleanField, IntegerField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from .tasks.run_spider import run_spider 
+from .tasks.load_data_to_db import load_data_to_db 
 
 
 class Spider(Model):
@@ -17,6 +19,8 @@ class Session(Model):
     spider      = ForeignKey    (Spider, on_delete=CASCADE)
     started     = DateTimeField (auto_now_add=True)
     finished    = DateTimeField (blank=True, null=True)
+    load_started  = DateTimeField (blank=True, null=True)
+    load_finished = DateTimeField (blank=True, null=True)
 
     def __str__(self):
         return f"{self.spider.name} {self.started} - {self.finished}"
@@ -25,6 +29,8 @@ class Session(Model):
 def run_spider_if_session_was_created(sender, instance, created, **kwargs):
     if (created):
         run_spider.delay(instance.id)
+        # run_spider.apply_async(instance.id, link=load_data_to_db.s(instance.id))
+        (run_spider.s(instance.id) | load_data_to_db.s(instance.id)).apply_async()
 
 
 class Site(Model):
@@ -46,11 +52,11 @@ class Page(Model):
 
 class Article(Model):
     site        = ForeignKey    (Site, on_delete=CASCADE)
-    idx         = CharField     (max_length=256,    help_text='ID or Slug.')
-    last_updated= DateTimeField (                   help_text='Datetime from ArticleSnapshot.timestamp')
-    title       = CharField     (default=''  , blank=True, max_length=256, help_text='Title.')
-    body        = JSONField     (default=dict, help_text='Desc  that was scriped from page.')
-    publish_date= DateTimeField (                   help_text='')
+    idx         = CharField     (max_length=256, help_text='ID or Slug.')
+    last_updated= DateTimeField (help_text='Datetime from ArticleSnapshot.timestamp')
+    title       = TextField     (help_text='Title.')
+    body        = TextField     (help_text='Main text of article')
+    publish_date= DateTimeField (blank=True, null=True, help_text='')
 
     class Meta:
         unique_together = (("site", "idx"),)
@@ -63,7 +69,7 @@ class ArticleSnapshot(Model):
     timestamp   = DateTimeField (                   help_text='Datetime when data was read from page.')
     title       = CharField     (default='', blank=True, max_length=256, help_text='Title.')
     body        = JSONField     (default=dict,      help_text='Desc  that was scriped from page.')
-    publish_date= DateTimeField (                   help_text='')
+    publish_date= DateTimeField (blank=True, null=True, help_text='')
 
     class Meta:
         unique_together = (("session", "page", "article"),)
