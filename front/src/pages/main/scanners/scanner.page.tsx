@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, RouteComponentProps, Redirect } from 'react-router'
+import { withRouter, RouteComponentProps } from 'react-router'
 import { observer } from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -9,16 +9,16 @@ const styles = (theme) => ({
 
 
 @observer
-class ScannersPage extends React.Component<RouteComponentProps> {
+class ScannerPage extends React.Component<RouteComponentProps> {
     render() {
         const { classes } = this.props;
 
         return (
             <React.Fragment>
-                <h3>Scanners</h3>
+                <p>Scanners</p>
             </React.Fragment>
         )
     }
 }
 
-export default withStyles(styles)(withRouter(ScannersPage))
+export default withStyles(styles)(withRouter(ScannerPage))

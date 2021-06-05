@@ -1,8 +1,8 @@
-import { Model, model, id, field, foreign, many } from 'mobx-orm'
-// import { api } from './api.adapter'
+import { Model, model, id, field } from 'mobx-orm'
+import { api } from './adapters/api.adapter'
 
 
-// @api('core', 'app')
+@api('spider')
 @model
 export class Spider extends Model {
     @id      id: number 
@@ -10,7 +10,7 @@ export class Spider extends Model {
     @field desc: string
 }
 
-// @api('core', 'app')
+@api('session')
 @model
 export class Session extends Model {
     @id     id          : number 
@@ -19,7 +19,7 @@ export class Session extends Model {
     @field  finished    : Date
 }
 
-// @api('core', 'app')
+@api('site')
 @model
 export class Site extends Model {
     @id      id: number 
@@ -27,7 +27,7 @@ export class Site extends Model {
     @field desc: string
 }
 
-// @api('core', 'app')
+@api('page')
 @model
 export class Page extends Model {
     @id     id      : number 
@@ -35,7 +35,7 @@ export class Page extends Model {
     @field  site_id : number 
 }
 
-// @api('core', 'app')
+@api('article')
 @model
 export class Article extends Model {
     @id     id          : number 
@@ -47,7 +47,7 @@ export class Article extends Model {
     @field  publish_date: Date 
 }
 
-// @api('core', 'app')
+@api('article-snapshot')
 @model
 export class ArticleSnapshot extends Model {
     @id     id          : number 

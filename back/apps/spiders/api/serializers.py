@@ -10,10 +10,10 @@ class SpiderSerializer(ModelSerializer):
 
 
 class SessionSerializer(ModelSerializer):
-	site_id = PrimaryKeyRelatedField(source='site', queryset=Site.objects.all())
+	spider_id = PrimaryKeyRelatedField(source='spider', queryset=Spider.objects.all())
 	class Meta:
 		model = Session
-		exclude = ('site',)
+		exclude = ('spider',)
 
 
 class SiteSerializer(ModelSerializer):
@@ -37,10 +37,10 @@ class ArticleSerializer(ModelSerializer):
 
 
 class ArticleSnapshotSerializer(ModelSerializer):
-	session_id = PrimaryKeyRelatedField(source='session' , queryset=Site.objects.all())
-	page_id    = PrimaryKeyRelatedField(source='page'    , queryset=Site.objects.all())
-	goods_id   = PrimaryKeyRelatedField(source='goods'   , queryset=Site.objects.all())
+	session_id = PrimaryKeyRelatedField(source='session' , queryset=Session.objects.all())
+	page_id    = PrimaryKeyRelatedField(source='page'    , queryset=Page.objects.all())
+	article_id   = PrimaryKeyRelatedField(source='article'   , queryset=Article.objects.all())
 	class Meta:
 		model = ArticleSnapshot
-		exclude = ('session', 'page', 'goods', )
+		exclude = ('session', 'page', 'article', )
 

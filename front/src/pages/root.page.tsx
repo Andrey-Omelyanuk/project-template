@@ -2,7 +2,7 @@ import React from 'react'
 import { RouteComponentProps } from 'react-router'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AuthPage from './auth/auth.page'
