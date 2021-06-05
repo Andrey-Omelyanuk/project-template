@@ -28,7 +28,8 @@ class ScannersPageState {
     }
 
     init() {
-        this.spiders = Spider.load() as any
+        if (!this.spiders)
+            this.spiders = Spider.load() as any
     }
 
     destroy() {
@@ -57,7 +58,7 @@ class ScannersPage extends React.Component<RouteComponentProps> {
     }
 
     componentWillUnmount() {
-        state.destroy()
+        // state.destroy()
     }
 
     render() {
@@ -77,21 +78,19 @@ class ScannersPage extends React.Component<RouteComponentProps> {
                     <Grid item xs={4}>
                         <Paper>
                             <List>
-                                {state.spiders.items.map(function(spider){
-                                    return 
-                                    <ListItem button component={NavLink} to={`${url}/1`} activeClassName={classes.active} >
-                                        <ListItemText primary="Trash" />
-                                    </ListItem>
+                                {state.spiders.items.map(function(spider: Spider){
+                                    return  <ListItem button key={spider.id} component={NavLink} to={`${url}/${spider.id}`} activeClassName={classes.active} >
+                                                <ListItemText primary={spider.name} />
+                                            </ListItem>
                                 })}
                             </List>
                         </Paper>
                     </Grid>
                     <Grid item xs>
                         <Paper className={classes.paper}>
-                            <div>test {state.spiders.items.length}</div>
                             <Switch>
-                                <Route exact path={`/`}>Choose a spider</Route>
-                                <Route path={`/:scanner_id`}><ScannerPage/></Route>
+                                <Route exact path={url}><p>Choose a spider</p></Route>
+                                <Route path={`${url}/:scanner_id`}><ScannerPage/></Route>
                             </Switch>
                         </Paper>
                     </Grid>

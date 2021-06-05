@@ -63,7 +63,6 @@ export class ApiAdapter<M extends Model> implements Adapter<M> {
         // init objects from data 
         let data = response.data 
         let objs : M[] = []
-        debugger
         for (let obj of data) {
             objs.push(new this.cls(obj))
         }
