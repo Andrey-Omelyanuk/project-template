@@ -4,17 +4,22 @@ from django.conf import settings
 from rest_framework import routers
 from .views.get_settings import get_settings
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, )
-from apps.spiders.api.views import *
+from apps.spiders.api.views import SpiderViewSet, SessionViewSet as SpiderSessionViewSet, SiteViewSet, PageViewSet, ArticleViewSet, ArticleSnapshotViewSet
+from apps.analyzers.api.views import AnalyzerViewSet, AnalyzerSessionViewSet, TagViewSet, TagHistoryViewSet
 
 
 router = routers.DefaultRouter(trailing_slash=True)
 router.register(r'spider'           , SpiderViewSet)
-router.register(r'session'          , SessionViewSet)
+router.register(r'spider-session'   , SpiderSessionViewSet)
 router.register(r'site'             , SiteViewSet)
 router.register(r'page'             , PageViewSet)
 router.register(r'article'          , ArticleViewSet)
 router.register(r'article-snapshot' , ArticleSnapshotViewSet)
 
+router.register(r'analyzer'         , AnalyzerViewSet)
+router.register(r'analyzer-session' , AnalyzerSessionViewSet)
+router.register(r'tag'              , TagViewSet)
+router.register(r'tag-history'      , TagHistoryViewSet)
 
 urlpatterns = [
     path('api/settings/'        , get_settings),

@@ -1,8 +1,7 @@
 from celery import chain
-from django.db.models import Model, CASCADE, ForeignKey, CharField, TextField, DateTimeField, BooleanField, IntegerField
+from django.db.models import Model, CASCADE, ForeignKey, CharField, TextField, DateTimeField, BooleanField, IntegerField, JSONField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.postgres.fields import JSONField
 from .tasks.run_spider import run_spider 
 from .tasks.load_data_to_db import load_data_to_db 
 

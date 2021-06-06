@@ -8,6 +8,7 @@ import { Page } from './spiders'
 export class Tag extends Model {
     @id      id: number 
     @field title: string
+    @field desc: string
 
     // this field exist only on frontend
     is_active: boolean

@@ -5,7 +5,6 @@ from celery         import shared_task
 from scrapy.crawler import CrawlerProcess
 from django.conf    import settings
 from django.utils.timezone import utc
-from .load_data_to_db import load_data_to_db 
 
 
 @shared_task
@@ -17,11 +16,7 @@ def run_spider(session_id):
     log_file  = os.path.join(settings.DATA_DIR, f"{session.id}.log" )
 
     process = CrawlerProcess(settings={
-        'FEEDS': {
-            feed_file: {
-                'format': 'jsonlines'
-            }
-        },
+        'FEEDS': { feed_file: { 'format': 'jsonlines' } },
         'LOG_FILE'      : log_file,
         'LOG_LEVEL'     : logging.DEBUG,
         'CLOSESPIDER_PAGECOUNT': 20, # limit for dev 
@@ -38,4 +33,3 @@ def run_spider(session_id):
         pass
     finally:
         process.stop()
-    # load_data_to_db.delay(session_id)
