@@ -30,7 +30,7 @@ import settings from 'src/services/settings'
 import auth from 'src/services/auth'
 import AnalyzersPage from './analyzers.page'
 import ScannersPage from './scanners/scanners.page'
-import SourcesPage from './sources.page'
+import SourcesPage from './sources/sources.page'
 import TrendsPage from './trends.page'
 import DashboardPage from './dashboard.page'
 import { computed, observable } from 'mobx';

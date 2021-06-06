@@ -12,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import SourcePage from './source.page'
 
 
 class SourcesPageState {
@@ -87,6 +88,7 @@ class SourcesPage extends React.Component<RouteComponentProps> {
                         <Paper className={classes.paper}>
                             <Switch>
                                 <Route exact path={url}><p>Choose a source</p></Route>
+                                <Route path={`${url}/:source_id`}><SourcePage/></Route>
                             </Switch>
                         </Paper>
                     </Grid>

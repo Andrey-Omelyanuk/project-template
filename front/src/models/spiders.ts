@@ -33,6 +33,7 @@ export class Page extends Model {
     @id     id      : number 
     @field  url     : string
     @field  site_id : number 
+    @field  last_visit: Date
 }
 
 @api('article')
