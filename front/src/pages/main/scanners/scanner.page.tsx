@@ -9,6 +9,12 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 
 class ScannerPageState {
@@ -68,13 +74,30 @@ class ScannerPage extends React.Component<RouteComponentProps> {
                 <p>Scanner {scanner_id}</p>
                 {state.sessions ? <p>{state.sessions.items.length}</p> : <p>No Sessions</p>}
                 {state.sessions && 
-                    <List>
-                        {state.sessions.items.map(function(session: Session){
-                            return  <ListItem key={session.id}>
-                                        <ListItemText primary={session.id} />
-                                    </ListItem>
-                        })}
-                    </List>
+                    <TableContainer>
+                        <Table className={classes.table} aria-label="simple table">
+                            <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Spider</TableCell>
+                                <TableCell>Started</TableCell>
+                                <TableCell>Finished</TableCell>
+                                <TableCell>Status</TableCell>
+                            </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            {state.sessions.items.map((row: Session) => (
+                                <TableRow key={row.id}>
+                                <TableCell>{row.id}</TableCell>
+                                <TableCell>{row.spider_id}</TableCell>
+                                <TableCell>{row.started}</TableCell>
+                                <TableCell>{row.finished}</TableCell>
+                                <TableCell>{row.status}</TableCell>
+                                </TableRow>
+                            ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 }
             </React.Fragment>
         )

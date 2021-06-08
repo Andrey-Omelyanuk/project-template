@@ -1,26 +1,30 @@
 import { Model, model, id, field } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
-import { Page } from './spiders'
+import { Article, Page } from './spiders'
 
 
-@api('tag')
+@api('analyzer')
 @model
-export class Tag extends Model {
+export class Analyzer extends Model {
     @id      id: number 
-    @field title: string
+    @field name: string
     @field desc: string
+}
 
-    // this field exist only on frontend
-    is_active: boolean
-    total_count: number
+@api('analyzer-session')
+@model
+export class AnalyzerSession extends Model {
+    @id             id : number 
+    @field analyzer_id : string
+    @field     started : Date
+    @field    finished : Date
 }
 
 @api('tag-history')
 @model
 export class TagHistory extends Model {
-    @id    id       : number 
-    @field timestamp: Date 
-    @field page_id  : Page 
-    @field tag_id   : Tag 
-    @field count    : number
+    @id            id : number 
+    @field article_id : number 
+    @field     tag_id : number 
+    @field      count : number
 }

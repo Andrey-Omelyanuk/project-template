@@ -1,3 +1,4 @@
+import { computed } from 'mobx'
 import { Model, model, id, field } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
 
@@ -10,13 +11,19 @@ export class Spider extends Model {
     @field desc: string
 }
 
-@api('session')
+@api('spider-session')
 @model
 export class Session extends Model {
     @id     id          : number 
     @field  spider_id   : number  
     @field  started     : Date
     @field  finished    : Date
+    @field  load_started     : Date
+    @field  load_finished    : Date
+
+    @computed get status() {
+        return 'test'
+    }
 }
 
 @api('site')
