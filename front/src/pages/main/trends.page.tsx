@@ -9,7 +9,7 @@ import FaceIcon from '@material-ui/icons/Face'
 import DoneIcon from '@material-ui/icons/Done'
 import Grid from '@material-ui/core/Grid'
 import Badge from '@material-ui/core/Badge'
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, AreaChart, Area, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip } from 'recharts';
 
 const styles = (theme) => ({
     root: {
@@ -26,7 +26,7 @@ const styles = (theme) => ({
         display: 'flex',
         overflow: 'auto',
         flexDirection: 'column',
-        height: 240,
+        height: 400,
     }
 });
 
@@ -40,10 +40,6 @@ class TrendsPage extends React.Component<RouteComponentProps> {
     render() {
         const { classes } = this.props;
 
-        // Generate Sales Data
-        function createData(time, amount) {
-            return { time, amount };
-        }
         const tags = [
             { id: 1, title: 'Якобы', is_active: true, total_count: 2},
             { id: 2, title: 'Куку', is_active: true, total_count: 20},
@@ -54,15 +50,10 @@ class TrendsPage extends React.Component<RouteComponentProps> {
             { id: 7, title: 'Неизвестные', is_active: true, total_count: 200},
         ]
         const data = [
-            createData('00:00', 0),
-            createData('03:00', 300),
-            createData('06:00', 600),
-            createData('09:00', 800),
-            createData('12:00', 1500),
-            createData('15:00', 2000),
-            createData('18:00', 2400),
-            createData('21:00', 2400),
-            createData('24:00', undefined),
+            { time: '00:00', amount: 10},
+            { time: '03:00', amount: 20},
+            { time: '06:00', amount: 40},
+            { time: '09:00', amount: 10},
         ];
         return (
             <React.Fragment>
@@ -74,16 +65,18 @@ class TrendsPage extends React.Component<RouteComponentProps> {
                                 return <Chip key={tag.id} label={`${tag.title} (${tag.total_count})`} clickable color={tag.is_active ? "primary":"default"} />
                             })}
                         </Paper>
-                        <Paper className={classes.root}>
+                        <Paper className={classes.chart_wrapper}>
                             <div>There is should be a chart of trends</div>
                             <ResponsiveContainer>
-                                <LineChart data={data} margin={{ top: 16, right: 16, bottom: 0, left: 24, }}>
-                                <XAxis dataKey="time"/>
-                                <YAxis>
-                                    <Label angle={270} position="left" style={{ textAnchor: 'middle' }}> Sales ($) </Label>
-                                </YAxis>
-                                <Line type="monotone" dataKey="amount" dot={false} />
-                                </LineChart>
+                                <AreaChart data={data} margin={{ top: 16, right: 16, bottom: 0, left: 24, }}>
+                                    <XAxis dataKey="time" stroke="#ff7300"/>
+                                    <YAxis stroke="#ff7300">
+                                        <Label angle={270} position="left" style={{ textAnchor: 'middle' }}> Sales ($) </Label>
+                                    </YAxis>
+                                    {/* <Line type="monotone" dataKey="amount" stroke="#ff7300" /> */}
+                                    <Area type="monotone" dataKey="amount" stroke="#8884d8" fill="#8884d8" />
+                                    <Tooltip/>
+                                </AreaChart>
                             </ResponsiveContainer>
                         </Paper>
                     </Grid>
