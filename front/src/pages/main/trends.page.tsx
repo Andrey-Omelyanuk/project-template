@@ -66,7 +66,6 @@ class TrendsPage extends React.Component<RouteComponentProps> {
                             })}
                         </Paper>
                         <Paper className={classes.chart_wrapper}>
-                            <div>There is should be a chart of trends</div>
                             <ResponsiveContainer>
                                 <AreaChart data={data} margin={{ top: 16, right: 16, bottom: 0, left: 24, }}>
                                     <XAxis dataKey="time" stroke="#ff7300"/>

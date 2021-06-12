@@ -15,11 +15,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { Analyzer, AnalyzerSession } from 'src/models/tags'
 
 
-class ScannerPageState {
+class AnalyzerPageState {
 
-    sessions: Query<Session> = null
+    sessions: Query<AnalyzerSession> = null
 
     get is_ready() {
         return this.sessions && this.sessions.is_ready
@@ -33,7 +34,7 @@ class ScannerPageState {
         // if (this.sessions)
         //     this.sessions.destroy()
         if (!this.sessions)
-            this.sessions = Session.load() as any
+            this.sessions = AnalyzerSession.load() as any
     }
 
     destroy() {
@@ -41,13 +42,13 @@ class ScannerPageState {
         this.sessions = null
     }
 }
-let state = new ScannerPageState()
+let state = new AnalyzerPageState()
 
 const styles = (theme) => ({
 });
 
 @observer
-class ScannerPage extends React.Component<RouteComponentProps> {
+class AnalyzerPage extends React.Component<RouteComponentProps> {
 
     componentDidMount() {
         state.init()
@@ -58,7 +59,7 @@ class ScannerPage extends React.Component<RouteComponentProps> {
     }
 
     render() {
-        const scanner_id = this.props.match.params["scanner_id"]
+        const analyzer_id = this.props.match.params["analyzer_id"]
         const { classes } = this.props;
         const { path, url } = this.props.match;
 
@@ -71,7 +72,7 @@ class ScannerPage extends React.Component<RouteComponentProps> {
         }
         return (
             <React.Fragment>
-                <p>Scanner {scanner_id}</p>
+                <p>Analyzer {analyzer_id}</p>
                 {state.sessions ? <p>{state.sessions.items.length}</p> : <p>No Sessions</p>}
                 {state.sessions && 
                     <TableContainer>
@@ -79,7 +80,7 @@ class ScannerPage extends React.Component<RouteComponentProps> {
                             <TableHead>
                             <TableRow>
                                 <TableCell>ID</TableCell>
-                                {/* <TableCell>Spider</TableCell> */}
+                                {/* <TableCell>Analyzer</TableCell> */}
                                 <TableCell>Started</TableCell>
                                 <TableCell>Finished</TableCell>
                                 <TableCell>Status</TableCell>
@@ -89,7 +90,7 @@ class ScannerPage extends React.Component<RouteComponentProps> {
                             {state.sessions.items.map((row: Session) => (
                                 <TableRow key={row.id}>
                                 <TableCell>{row.id}</TableCell>
-                                {/* <TableCell>{row.spider_id}</TableCell> */}
+                                {/* <TableCell>{row.analyzer_id}</TableCell> */}
                                 <TableCell>{row.started}</TableCell>
                                 <TableCell>{row.finished}</TableCell>
                                 <TableCell>{row.status}</TableCell>
@@ -104,4 +105,4 @@ class ScannerPage extends React.Component<RouteComponentProps> {
     }
 }
 
-export default withStyles(styles)(withRouter(ScannerPage))
+export default withStyles(styles)(withRouter(AnalyzerPage))

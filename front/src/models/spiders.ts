@@ -1,5 +1,5 @@
 import { computed } from 'mobx'
-import { Model, model, id, field } from 'mobx-orm'
+import { Model, model, id, field, foreign } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
 
 
@@ -22,7 +22,7 @@ export class Session extends Model {
     @field  load_finished    : Date
 
     @computed get status() {
-        return 'test'
+        return this.finished ? 'Done': 'In progress'
     }
 }
 
@@ -41,6 +41,12 @@ export class Page extends Model {
     @field  url     : string
     @field  site_id : number 
     @field  last_visit: Date
+
+    @foreign(Site, 'site_id') site: Site 
+
+    @computed get full_url() {
+        return `https://${this.site.url}${this.url}`
+    }
 }
 
 @api('article')

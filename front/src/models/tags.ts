@@ -1,4 +1,5 @@
-import { Model, model, id, field } from 'mobx-orm'
+import { computed } from 'mobx'
+import { Model, model, id, field, many } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
 import { Article, Page } from './spiders'
 
@@ -18,6 +19,30 @@ export class AnalyzerSession extends Model {
     @field analyzer_id : string
     @field     started : Date
     @field    finished : Date
+
+    @computed get status() {
+        return this.finished ? 'Done': 'In progress'
+    }
+}
+
+
+@api('tag')
+@model
+export class Tag extends Model {
+    @id    id   : number 
+    @field title: string 
+    @field desc : string 
+
+    histories: TagHistory[]
+
+    @computed get total_count() {
+        let total = 0
+        for(let history of this.histories) {
+            total = total + history.count
+        }
+
+        return total
+    }
 }
 
 @api('tag-history')
@@ -28,3 +53,4 @@ export class TagHistory extends Model {
     @field     tag_id : number 
     @field      count : number
 }
+many(TagHistory, 'tag_id')(Tag, 'histories') 
