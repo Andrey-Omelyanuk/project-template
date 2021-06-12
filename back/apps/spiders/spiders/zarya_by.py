@@ -9,9 +9,15 @@ from .items import Article
 class Spider(CrawlSpider):
     name = "zarya.by"
     allowed_domains = ["zarya.by"]
-    start_urls = [ "https://zarya.by/category/news/" ]
+    start_urls = [ 
+        "https://zarya.by/category/news/",
+        "https://zarya.by/category/news/page/2/",
+        "https://zarya.by/category/news/page/3/",
+        "https://zarya.by/category/news/page/4/",
+        "https://zarya.by/category/news/page/5/",
+        ]
     rules = (
-      Rule(LinkExtractor(allow=[r'https:\/\/zarya.by\/news\/lenta-novostej\/\S+'], restrict_css=['.newsFeedList', ]), 'parse'),
+      Rule(LinkExtractor(allow=[r'https:\/\/zarya.by\/news\/lenta-novostej\/\S+'], restrict_css=['.newsFeedList', ]), 'parse', follow=True),
     )
 
     def parse(self, response):

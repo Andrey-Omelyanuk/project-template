@@ -40,7 +40,7 @@ export class Page extends Model {
     @id     id      : number 
     @field  url     : string
     @field  site_id : number 
-    @field  last_visit: Date
+    @field  last_visit: string // Date
 
     @foreign(Site, 'site_id') site: Site 
 
@@ -58,7 +58,7 @@ export class Article extends Model {
     @field  last_updated: Date 
     @field  title       : string 
     @field  body        : string 
-    @field  publish_date: Date 
+    @field  publish_date: string //Date 
 }
 
 @api('article-snapshot')

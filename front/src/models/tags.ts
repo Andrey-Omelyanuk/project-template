@@ -1,5 +1,5 @@
-import { computed } from 'mobx'
-import { Model, model, id, field, many } from 'mobx-orm'
+import { computed, observable } from 'mobx'
+import { Model, model, foreign, id, field, many } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
 import { Article, Page } from './spiders'
 
@@ -35,6 +35,8 @@ export class Tag extends Model {
 
     histories: TagHistory[]
 
+    @observable is_active: boolean
+
     @computed get total_count() {
         let total = 0
         for(let history of this.histories) {
@@ -42,6 +44,12 @@ export class Tag extends Model {
         }
 
         return total
+    }
+
+    color
+    constructor(...args) {
+        super(args)
+        this.color = '#'+(Math.random()*0xFFFFFF<<0).toString(16)
     }
 }
 
@@ -52,5 +60,7 @@ export class TagHistory extends Model {
     @field article_id : number 
     @field     tag_id : number 
     @field      count : number
+
+    @foreign(Article, 'article_id') article: Article 
 }
 many(TagHistory, 'tag_id')(Tag, 'histories') 
