@@ -15,30 +15,6 @@ import { Spider } from 'src/models/spiders'
 import { makeAutoObservable } from 'mobx'
 
 
-class ScannersPageState {
-
-    spiders : Query<Spider> = null
-
-    get is_ready() {
-        return this.spiders && this.spiders.is_ready
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        if (!this.spiders)
-            this.spiders = Spider.load() as any
-    }
-
-    destroy() {
-        if (this.spiders) this.spiders.destroy()
-        this.spiders = null
-    }
-}
-let state = new ScannersPageState()
-
 const styles = (theme) => ({
     active: {
         backgroundColor: theme.palette.action.selected
@@ -49,29 +25,11 @@ const styles = (theme) => ({
 @observer
 class ScannersPage extends React.Component<RouteComponentProps> {
 
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
-
     render() {
         const { classes } = this.props;
         const { path, url } = this.props.match;
+        const state = this.props.state
 
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
-        }
         return (
             <React.Fragment>
                 <Grid container spacing={3}>
@@ -90,7 +48,7 @@ class ScannersPage extends React.Component<RouteComponentProps> {
                         <Paper className={classes.paper}>
                             <Switch>
                                 <Route exact path={url}><p>Choose a spider</p></Route>
-                                <Route path={`${url}/:scanner_id`}><ScannerPage/></Route>
+                                <Route path={`${url}/:scanner_id`}><ScannerPage state={state}/></Route>
                             </Switch>
                         </Paper>
                     </Grid>

@@ -15,61 +15,18 @@ import ListItemText from '@material-ui/core/ListItemText'
 import SourcePage from './source.page'
 
 
-class SourcesPageState {
-
-    sites: Query<Site> = null
-
-    get is_ready() {
-        return this.sites && this.sites.is_ready
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        // if (this.sites)
-        //     this.sites.destroy()
-        if (!this.sites)
-            this.sites = Site.load() as any
-    }
-
-    destroy() {
-        if (this.sites) this.sites.destroy()
-        this.sites = null
-    }
-}
-let state = new SourcesPageState()
-
 const styles = (theme) => ({
 });
 
 
 @observer
 class SourcesPage extends React.Component<RouteComponentProps> {
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
 
     render() {
         const { classes } = this.props;
         const { path, url } = this.props.match;
+        const state = this.props.state
 
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
-        }
         return (
             <React.Fragment>
                 <Grid container spacing={3}>
@@ -88,7 +45,7 @@ class SourcesPage extends React.Component<RouteComponentProps> {
                         <Paper className={classes.paper}>
                             <Switch>
                                 <Route exact path={url}><p>Choose a source</p></Route>
-                                <Route path={`${url}/:source_id`}><SourcePage/></Route>
+                                <Route path={`${url}/:source_id`}><SourcePage state={this.props.state}/></Route>
                             </Switch>
                         </Paper>
                     </Grid>

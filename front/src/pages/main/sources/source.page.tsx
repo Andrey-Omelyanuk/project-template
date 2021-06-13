@@ -21,32 +21,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { Pages } from '@material-ui/icons'
 
 
-class SourcePageState {
-    site        : Site
-    pages       : Query<Page>
-    tags        : Query<Tag>
-    tags_history: Query<TagHistory>
-
-    get is_ready() {
-        return this.pages && this.pages.is_ready 
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        if (!this.pages) this.pages = Page.load() as any
-        if (!this.tags) this.tags = Tag.load() as any
-        if (!this.tags_history) this.tags_history = TagHistory.load() as any
-    }
-
-    destroy() {
-        if (this.pages) this.pages.destroy(); this.pages= null
-    }
-}
-
-let state = new SourcePageState()
 
 const styles = (theme) => ({
 });
@@ -54,42 +28,36 @@ const styles = (theme) => ({
 @observer
 class SourcePage extends React.Component<RouteComponentProps> {
 
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
-
     render() {
-        const source_id = this.props.match.params["source_id"]
+        const source_id = parseInt(this.props.match.params["source_id"])
         const { classes } = this.props;
         const { path, url } = this.props.match;
+        const state = this.props.state
 
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
+        let site: Site
+        for(let s of state.sites.items) {
+            if (s.id === source_id) {
+                site = s 
+                break
+            }
         }
-        if (state.pages.items.length) {
-            state.site = state.pages.items[0].site
-        }
+
         return (
             <React.Fragment>
-                <p>Url        : {state.site ? state.site.url : ''}</p>
-                <p>Desc       : {state.site ? state.site.desc: ''}</p>
-                <p>Total pages: {state.pages? state.pages.items.length : 0}</p>
+                <div style={{margin: '10px'}}>
+                    <p>Url        : {site ? site.url : ''}</p>
+                    <p>Desc       : {site ? site.desc: ''}</p>
+                    <p>Total pages: {site ? site.pages.length : 0} </p>
+                </div>
 
-                <Paper className={classes.root}>
-                    {state.tags.items
-                    .filter(tag => tag.total_count)
-                    .map(function(tag){
-                        return <Chip key={tag.id} label={`${tag.title} (${tag.total_count})`} clickable color={tag.is_active ? "primary":"default"} />
+                <div className={classes.root} style={{margin: '10px'}}>
+                    {site.tag_counts
+                    .filter(site_tag => site_tag.count)
+                    .map(function(site_tag){
+                        return <Chip key={site_tag.tag.id} style={{margin: '5px'}} 
+                        label={`${site_tag.tag.title} (${site_tag.count})`}/>
                     })}
-                </Paper>
+                </div>
                 {/* <Paper className={classes.root}>
                     <div>There is should be a chart of trends</div>
                 </Paper> */}
@@ -104,7 +72,7 @@ class SourcePage extends React.Component<RouteComponentProps> {
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {state.pages.items.map((page: Page) => (
+                        {site.pages.map((page: Page) => (
                             <TableRow key={page.id}>
                             <TableCell component="th" scope="row">{page.id}</TableCell>
                             {/* <TableCell align="right">{page.site.url}</TableCell> */}

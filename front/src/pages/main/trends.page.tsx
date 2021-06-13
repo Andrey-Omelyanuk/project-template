@@ -17,35 +17,6 @@ import { Page, Session, Site, Article } from 'src/models/spiders'
 import { Tag, TagHistory } from 'src/models/tags'
 
 
-class TrendsPageState {
-    site        : Site
-    articles    : Query<Article>
-    pages       : Query<Page>
-    tags        : Query<Tag>
-    tags_history: Query<TagHistory>
-
-    get is_ready() {
-        return this.pages && this.pages.is_ready 
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        if (!this.articles) this.articles = Article.load() as any
-        if (!this.pages) this.pages = Page.load() as any
-        if (!this.tags) this.tags = Tag.load() as any
-        if (!this.tags_history) this.tags_history = TagHistory.load() as any
-    }
-
-    destroy() {
-        if (this.pages) this.pages.destroy(); this.pages= null
-    }
-}
-let state = new TrendsPageState()
-
-
 const styles = (theme) => ({
     root: {
         display: 'flex',
@@ -69,26 +40,8 @@ const styles = (theme) => ({
 @observer
 class TrendsPage extends React.Component<RouteComponentProps> {
 
-    @computed is_ready() {
-    }
-
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
-
     render() {
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
-        }
-        const { classes } = this.props;
+        const { classes, state } = this.props;
 
         let _data: any = {};
         for(let tag of state.tags.items) {

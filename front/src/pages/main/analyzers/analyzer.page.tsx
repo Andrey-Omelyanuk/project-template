@@ -18,88 +18,52 @@ import TableRow from '@material-ui/core/TableRow';
 import { Analyzer, AnalyzerSession } from 'src/models/tags'
 
 
-class AnalyzerPageState {
-
-    sessions: Query<AnalyzerSession> = null
-
-    get is_ready() {
-        return this.sessions && this.sessions.is_ready
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        // if (this.sessions)
-        //     this.sessions.destroy()
-        if (!this.sessions)
-            this.sessions = AnalyzerSession.load() as any
-    }
-
-    destroy() {
-        if (this.sessions) this.sessions.destroy()
-        this.sessions = null
-    }
-}
-let state = new AnalyzerPageState()
-
 const styles = (theme) => ({
 });
 
 @observer
 class AnalyzerPage extends React.Component<RouteComponentProps> {
 
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
-
     render() {
-        const analyzer_id = this.props.match.params["analyzer_id"]
+        const analyzer_id = parseInt(this.props.match.params["analyzer_id"])
         const { classes } = this.props;
         const { path, url } = this.props.match;
+        const state = this.props.state
 
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
+        let analyzer: Analyzer 
+        for(let s of state.analyzers.items) {
+            if (s.id === analyzer_id) {
+                analyzer = s 
+                break
+            }
         }
         return (
             <React.Fragment>
-                <p>Analyzer {analyzer_id}</p>
-                {state.sessions ? <p>{state.sessions.items.length}</p> : <p>No Sessions</p>}
-                {state.sessions && 
-                    <TableContainer>
-                        <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                {/* <TableCell>Analyzer</TableCell> */}
-                                <TableCell>Started</TableCell>
-                                <TableCell>Finished</TableCell>
-                                <TableCell>Status</TableCell>
+                {/* {state.sessions ? <p>{state.sessions.items.length}</p> : <p>No Sessions</p>} */}
+                <TableContainer>
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                        <TableRow>
+                            <TableCell>ID</TableCell>
+                            {/* <TableCell>Analyzer</TableCell> */}
+                            <TableCell>Started</TableCell>
+                            <TableCell>Finished</TableCell>
+                            <TableCell>Status</TableCell>
+                        </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {analyzer.sessions.map((row: Session) => (
+                            <TableRow key={row.id}>
+                            <TableCell>{row.id}</TableCell>
+                            {/* <TableCell>{row.analyzer_id}</TableCell> */}
+                            <TableCell>{row.started}</TableCell>
+                            <TableCell>{row.finished}</TableCell>
+                            <TableCell>{row.status}</TableCell>
                             </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {state.sessions.items.map((row: Session) => (
-                                <TableRow key={row.id}>
-                                <TableCell>{row.id}</TableCell>
-                                {/* <TableCell>{row.analyzer_id}</TableCell> */}
-                                <TableCell>{row.started}</TableCell>
-                                <TableCell>{row.finished}</TableCell>
-                                <TableCell>{row.status}</TableCell>
-                                </TableRow>
-                            ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                }
+                        ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </React.Fragment>
         )
     }

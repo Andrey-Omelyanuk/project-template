@@ -10,6 +10,8 @@ export class Analyzer extends Model {
     @id      id: number 
     @field name: string
     @field desc: string
+
+    sessions: AnalyzerSession[]
 }
 
 @api('analyzer-session')
@@ -24,7 +26,7 @@ export class AnalyzerSession extends Model {
         return this.finished ? 'Done': 'In progress'
     }
 }
-
+many(AnalyzerSession, 'analyzer_id')(Analyzer, 'sessions') 
 
 @api('tag')
 @model
@@ -61,6 +63,8 @@ export class TagHistory extends Model {
     @field     tag_id : number 
     @field      count : number
 
+    @foreign(Tag, 'tag_id') tag: Tag 
     @foreign(Article, 'article_id') article: Article 
 }
 many(TagHistory, 'tag_id')(Tag, 'histories') 
+many(TagHistory, 'article_id')(Article, 'tag_histories') 

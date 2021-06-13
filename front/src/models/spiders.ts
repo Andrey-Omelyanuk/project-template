@@ -1,6 +1,7 @@
 import { computed } from 'mobx'
-import { Model, model, id, field, foreign } from 'mobx-orm'
+import { many, Model, model, id, field, foreign } from 'mobx-orm'
 import { api } from './adapters/api.adapter'
+import { Tag, TagHistory } from './tags'
 
 
 @api('spider')
@@ -9,6 +10,7 @@ export class Spider extends Model {
     @id      id: number 
     @field name: string
     @field desc: string
+    sessions: Session[]
 }
 
 @api('spider-session')
@@ -25,6 +27,7 @@ export class Session extends Model {
         return this.finished ? 'Done': 'In progress'
     }
 }
+many(Session, 'spider_id')(Spider, 'sessions') 
 
 @api('site')
 @model
@@ -32,6 +35,19 @@ export class Site extends Model {
     @id      id: number 
     @field  url: string
     @field desc: string
+    pages: Page[]
+    articles: Article[]
+
+    @computed get tag_counts() : [{tag: Tag, count: number}] {
+        let tags = {} 
+        for (let article of this.articles) {
+            for (let tag_history of article.tag_histories) {
+                if (!tags[tag_history.tag_id]) tags[tag_history.tag_id] = {tag: tag_history.tag, count: 0}
+                tags[tag_history.tag_id].count = tags[tag_history.tag_id].count + tag_history.count
+            }
+        }
+        return (<any>Object).values(tags)
+    }
 }
 
 @api('page')
@@ -48,6 +64,7 @@ export class Page extends Model {
         return `https://${this.site.url}${this.url}`
     }
 }
+many(Page, 'site_id')(Site, 'pages') 
 
 @api('article')
 @model
@@ -59,7 +76,10 @@ export class Article extends Model {
     @field  title       : string 
     @field  body        : string 
     @field  publish_date: string //Date 
+
+    tag_histories: TagHistory[]
 }
+many(Article, 'site_id')(Site, 'articles') 
 
 @api('article-snapshot')
 @model

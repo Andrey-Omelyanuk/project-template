@@ -6,38 +6,11 @@ import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import AnalyzerPage from './analyzer.page'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import { Query } from 'mobx-orm'
-import { makeAutoObservable } from 'mobx'
 import { Analyzer } from 'src/models/tags'
 
-
-class AnalyzersPageState {
-
-    analyzers: Query<Analyzer> = null
-
-    get is_ready() {
-        return this.analyzers && this.analyzers.is_ready
-    }
-
-    constructor() {
-        makeAutoObservable(this)
-    }
-
-    init() {
-        if (!this.analyzers)
-            this.analyzers = Analyzer.load() as any
-    }
-
-    destroy() {
-        if (this.analyzers) this.analyzers.destroy()
-        this.analyzers = null
-    }
-}
-let state = new AnalyzersPageState()
 
 const styles = (theme) => ({
     active: {
@@ -49,29 +22,11 @@ const styles = (theme) => ({
 @observer
 class AnalyzersPage extends React.Component<RouteComponentProps> {
 
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidMount() {
-        state.init()
-    }
-
-    componentWillUnmount() {
-        // state.destroy()
-    }
-
     render() {
         const { classes } = this.props;
         const { path, url } = this.props.match;
+        const state = this.props.state
 
-        if (!state.is_ready) {
-            return (
-                <React.Fragment>
-                    <CircularProgress color="secondary" />
-                </React.Fragment>
-            )
-        }
         return (
             <React.Fragment>
                 <Grid container spacing={3}>
@@ -90,7 +45,7 @@ class AnalyzersPage extends React.Component<RouteComponentProps> {
                         <Paper className={classes.paper}>
                             <Switch>
                                 <Route exact path={url}><p>Choose a analyzer</p></Route>
-                                <Route path={`${url}/:analyzer_id`}><AnalyzerPage/></Route>
+                                <Route path={`${url}/:analyzer_id`}><AnalyzerPage state={state}/></Route>
                             </Switch>
                         </Paper>
                     </Grid>

@@ -34,6 +34,10 @@ import SourcesPage from './sources/sources.page'
 import TrendsPage from './trends.page'
 import DashboardPage from './dashboard.page'
 import { computed, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx'
+import { Query } from 'mobx-orm'
+import { Site, Page, Session, Spider, Article, ArticleSnapshot } from 'src/models/spiders'
+import { Tag, TagHistory, AnalyzerSession, Analyzer } from 'src/models/tags'
 
 
 const drawerWidth = 240;
@@ -69,18 +73,65 @@ const styles = (theme) => ({
     }
 });
 
+class MainPageState {
+
+    sites: Query<Site> = null
+    pages: Query<Page> = null
+    sessions: Query<Session> = null
+    spiders: Query<Spider> = null
+    articles: Query<Article> = null
+    // article_snapshots: Query<ArticleSnapshot> = null
+
+    tags: Query<Tag> = null
+    tag_histories: Query<TagHistory> = null
+    analyzer_sessions: Query<AnalyzerSession> = null
+    analyzers: Query<Analyzer> = null
+
+    get is_ready() {
+        return (this.sites && this.sites.is_ready)
+            && (this.pages && this.pages.is_ready)
+            && (this.sessions && this.sessions.is_ready)
+            && (this.spiders && this.spiders.is_ready)
+            && (this.articles && this.articles.is_ready)
+            && (this.tags && this.tags.is_ready)
+            && (this.tag_histories && this.tag_histories.is_ready)
+            && (this.analyzer_sessions && this.analyzer_sessions.is_ready)
+            && (this.analyzers && this.analyzers.is_ready)
+    }
+
+    constructor() {
+        makeAutoObservable(this)
+    }
+
+    init() {
+        if (!this.sites) this.sites = Site.load() as any
+        if (!this.pages) this.pages = Page.load() as any
+        if (!this.sessions) this.sessions = Session.load() as any
+        if (!this.spiders) this.spiders = Spider.load() as any
+        if (!this.articles) this.articles = Article.load() as any
+        if (!this.tags) this.tags = Tag.load() as any
+        if (!this.tag_histories) this.tag_histories = TagHistory.load() as any
+        if (!this.analyzer_sessions) this.analyzer_sessions = AnalyzerSession.load() as any
+        if (!this.analyzers) this.analyzers = Analyzer.load() as any
+    }
+
+    destroy() {
+        if (this.sites) this.sites.destroy(); this.sites = null
+    }
+}
+let state = new MainPageState()
 
 @observer
 class MainPage extends React.Component<RouteComponentProps> {
 
     @observable is_ready: boolean  = false
 
-    constructor(props) {
-        super(props)
-        this.is_ready = true 
-        setTimeout(() => {
-            this.is_ready = true
-        }, 2000)
+    componentDidMount() {
+        state.init()
+    }
+
+    componentWillUnmount() {
+        // state.destroy()
     }
 
     render() {
@@ -93,7 +144,7 @@ class MainPage extends React.Component<RouteComponentProps> {
             this.props.history.push(`/`);
         }
 
-        if (!this.is_ready) {
+        if (!state.is_ready) {
             return (
                 <React.Fragment>
                     <CircularProgress color="secondary" />
@@ -136,11 +187,11 @@ class MainPage extends React.Component<RouteComponentProps> {
                 </Drawer>
                 <main className={classes.main}>
                     <Switch>
-                        <Route exact path={`/`   }><DashboardPage/></Route>
-                        <Route path={`/scanners` }><ScannersPage/></Route>
-                        <Route path={`/analyzers`}><AnalyzersPage/></Route>
-                        <Route path={`/trends`   }><TrendsPage/></Route>
-                        <Route path={`/sources`  }><SourcesPage/></Route>
+                        <Route exact path={`/`   }><DashboardPage state={state}/></Route>
+                        <Route path={`/scanners` }><ScannersPage state={state}/></Route>
+                        <Route path={`/analyzers`}><AnalyzersPage state={state}/></Route>
+                        <Route path={`/trends`   }><TrendsPage state={state}/></Route>
+                        <Route path={`/sources`  }><SourcesPage state={state} /></Route>
                     </Switch>
                 </main>
             </React.Fragment>
