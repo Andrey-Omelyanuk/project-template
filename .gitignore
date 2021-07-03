@@ -7,3 +7,5 @@ back/data/*.json
 back/data/*.log
 
 *.pyc
+
+infra/env/tmp
