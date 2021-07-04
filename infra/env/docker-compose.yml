@@ -1,44 +1,38 @@
 version: '3.4'
 services:
 
-  registry:
-    image: registry:2
-    ports:
-    - 5000:5000
+  # registry:
+  #   image: registry:2
+  #   ports:
+  #   - 5000:5000
+  #   volumes:
+  #     - ./tmp/registry:/var/lib/registry
+
+  # portainer-server:
+  #   image: portainer/portainer-ce
+  #   ports:
+  #     - 8000:8000 
+  #     - 9000:9000 
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./tmp/portainer-server:/data 
+
+  # portainer-agent:
+  #   image: portainer/agent
+  #   ports:
+  #     - 9001:9001 
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock 
+  #     - /var/lib/docker/volumes:/var/lib/docker/volumes 
+
+  jenkins:
+    build: 
+      context: .
+      dockerfile: jenkins.dockerfile 
+    ports: 
+      -  8080:8080 
+      - 50000:50000
     volumes:
-      - ./tmp/registry:/var/lib/registry
-
-  portainer-server:
-    image: portainer/portainer-ce
-    ports:
-      - 8000:8000 
-      - 9000:9000 
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./tmp/portainer-server:/data 
-
-  portainer-agent:
-    image: portainer/agent
-    ports:
-      - 9001:9001 
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock 
-      - /var/lib/docker/volumes:/var/lib/docker/volumes 
-
-  # jenkins:
-  #   # user    : ${CURRENT_UID}
-  #   image   : jenkins/jenkins:lts-jdk11
-  #   # restart : always
-  #   ports: 
-  #     -  8080:8080 
-  #     - 50000:50000
-  #   # volumes:
-      # - ./tmp/jenkins:/var/jenkins_home 
-  #    - ./tmp/jenkins/:/jenkins
-  #    - /var/run/docker.sock:/var/run/docker.sock
-  #    - /usr/bin/docker:/usr/bin/docker
-  #   environment:
-  #    - JENKINS_HOME=/jenkins
-
-  # jenkins:
-  # jenkins-worker:
+     - ./tmp/jenkins:/var/jenkins_home 
+    #  - /var/run/docker.sock:/var/run/docker.sock
+    #  - /usr/bin/docker:/usr/bin/docker
