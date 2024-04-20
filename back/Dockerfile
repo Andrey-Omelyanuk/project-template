@@ -1,6 +1,6 @@
 FROM python:3.8.3-alpine as base
 WORKDIR /app
-RUN pip install --upgrade pip
+# RUN pip install --upgrade pip
 ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 RUN apk add --update --no-cache \
     # install psycopg2 dependencies
