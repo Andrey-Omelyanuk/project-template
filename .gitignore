@@ -1,11 +1,6 @@
 .idea
 .ropeproject
 *.swp
+.env
 
-front/node_modules
-back/data/*.json
-back/data/*.log
-
-*.pyc
-
-infra/env/tmp
+docker-compose.yml
