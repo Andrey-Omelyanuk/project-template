@@ -21,8 +21,12 @@ run:
 stop:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down
 
+reset:
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down -v
+
 log:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) logs $(s)	
 
 sh:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec $(s) sh	
+
