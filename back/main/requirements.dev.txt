@@ -1,0 +1,9 @@
+django-debug-toolbar    == 4.4.6    # A configurable set of panels that display various debug information about the current request/response.
+flower                  == 2.0.1    # Flower is a web based tool for monitoring and administrating Celery clusters.
+pytest                  == 7.2.0    # The framework makes it easy to write small tests, yet scales to support complex functional testing for applications and libraries.
+pytest-mock             == 3.10.0   # Thin-wrapper around the mock package for easier use with pytest
+pytest-django           == 4.5.2    # A plugin for pytest that provides a set of useful tools for testing Django applications and projects
+pytest-cov              == 4.0.0    # This plugin produces coverage reports.
+pytest-xdist[psutil]    == 3.2.0    # Run test in parallel.
+pylint                  == 2.15.7   # A static code analyser for Python.
+pylint-django           == 2.5.3    # A Pylint plugin for improving code analysis when analysing code using Django.

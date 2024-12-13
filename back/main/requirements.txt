@@ -1,0 +1,24 @@
+# -------------------------------------------------------------------------------------------------
+# Base
+# -------------------------------------------------------------------------------------------------
+psycopg2-binary         == 2.9.10   # Python-PostgreSQL Database Adapter
+celery[redis]           == 5.4.0    # Distributed Task Queue.
+sentry-sdk              == 2.19.2   # The official Python SDK for Sentry
+boto3                   == 1.35.80  # The AWS SDK for Python
+PyYAML                  == 6.0.2    # PyYAML is a YAML parser and emitter for Python.
+PyJWT                   == 2.10.1   # JSON Web Token implementation in Python.
+requests                == 2.32.3   # Requests is a simple, yet elegant, HTTP library.
+# -------------------------------------------------------------------------------------------------
+# Django
+# -------------------------------------------------------------------------------------------------
+Django                          == 5.1.4    #
+djangorestframework             == 3.15.2   # Web APIs for Django, made easy.
+django-allauth                  == 0.63.6   # Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication.
+django-celery-results           == 2.5.1    # This extension enables you to store Celery task results using the Django ORM.
+django-celery-beat              == 2.7.0    # Database-backed Periodic Tasks.
+django-cors-headers             == 4.6.0    # for handling the server headers required for Cross-Origin Resource Sharing (CORS).
+django-extensions               == 3.2.3    # Django Extensions is a collection of custom extensions for the Django Framework.
+django-mptt                     == 0.16.0   # MPTT is a technique for storing hierarchical data in a database. The aim is to make retrieval operations very efficient.
+django-simple-history           == 3.7.0    # Store model history and view/revert changes from admin site.
+drf-flex-fields                 == 1.0.2    # Flexible, dynamic fields and nested resources for Django REST Framework serializers.
+# -------------------------------------------------------------------------------------------------

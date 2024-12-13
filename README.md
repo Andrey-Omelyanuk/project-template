@@ -1,4 +1,5 @@
 # project-template
+My personal template for new projects.
 
 
 Don't use this if you have limited resources:

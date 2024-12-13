@@ -1,6 +1,7 @@
 .idea
 .ropeproject
 *.swp
-.env
 
+.env
 docker-compose.yml
+/utils/nginx.conf

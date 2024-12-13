@@ -1,0 +1,13 @@
+# folders
+.cache
+.temp
+.coverage
+.idea
+.pytest_cache
+.ropeproject
+htmlcov
+
+# files
+*.swp
+*.pyc
+celerybeat-schedule
