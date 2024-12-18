@@ -3,7 +3,7 @@ import { User } from '@/models/core'
 import { me } from '@/services'
 
 
-export const UserProfilePage = observer(() => {
+const UserProfilePage = observer(() => {
     const user = User.get(me.user_id) as User | undefined
     return (
         <div>
@@ -12,3 +12,5 @@ export const UserProfilePage = observer(() => {
         </div>
     )
 })
+
+export default UserProfilePage

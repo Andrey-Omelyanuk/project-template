@@ -7,11 +7,9 @@ SITE_ID = 1
 # env.DOMAIN = localhost or domain.com
 ALLOWED_HOSTS           = [f".{os.environ['DOMAIN']}", ]
 SESSION_COOKIE_DOMAIN   =  f".{os.environ['DOMAIN']}"
-# CSRF_TRUSTED_ORIGINS    = [ f'http://main{domain}' for domain in ALLOWED_HOSTS]
-# CSRF_USE_SESSIONS       = True
 CSRF_COOKIE_DOMAIN      =  f".{os.environ['DOMAIN']}"
 CORS_ALLOW_CREDENTIALS  = True
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS  = True
 
 INTERNAL_IPS            = os.getenv('INTERNAL_IPS'          , '127.0.0.1,localhost').split(',')
 

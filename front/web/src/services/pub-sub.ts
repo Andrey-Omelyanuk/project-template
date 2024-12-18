@@ -34,8 +34,8 @@ class PubSub {
     async init() {
         if (this.centrifuge) 
             return
-        await settings.ready()
-        await me.ready()
+        await settings.ready
+        await me.ready
         await this.connect()
 
         // disconnect on logout

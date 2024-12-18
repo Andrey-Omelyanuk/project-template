@@ -66,13 +66,13 @@ class Me {
     }
 
     logout () {
-        window.location.href = `http://main.${window.location.hostname}/auth/logout/`
+        window.location.href = `${window.location.protocol}//main.${window.location.hostname}/auth/logout/`
     }
 
     shoudBeAuthenticated () {
         if (!this.isAuthenticated) {
             // TODO: don't use constant path, use settings
-            window.location.href = `http://main.${window.location.hostname}/auth/login/`
+            window.location.href = `${window.location.protocol}//main.${window.location.hostname}/auth/login/`
         }
     }
 
