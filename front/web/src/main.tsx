@@ -12,6 +12,8 @@ import LandingPage from './pages/public/landing.tsx'
 import PublicLayout from './pages/public/layout.tsx'
 import PricingPage from './pages/public/prices.tsx'
 import AboutPage from './pages/public/about.tsx'
+import NotFoundPage from './pages/404.tsx'
+import Welcome from './components/core/Welcome.tsx'
 const BaseLayout        = lazy(() => import('./pages/app/layout.tsx'))
 const DashboardPage     = lazy(() => import('./pages/app/dashboard.tsx'))
 const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
@@ -23,7 +25,6 @@ FocusStyleManager.onlyShowFocusOnTabs()
 
 ReactDOM.createRoot(root).render(
     <BrowserRouter>
-        {/* // TODO: add 404 */}
         <Routes>
             <Route path='landing'>
                 <Route element={<PublicLayout/>}>
@@ -35,7 +36,7 @@ ReactDOM.createRoot(root).render(
             <Route path='/'>
                 <Route element={(
                     // TODO: add global loading screen
-                    <Suspense fallback={<>First Loading ...</>}>
+                    <Suspense fallback={<Welcome/>}>
                         <BaseLayout/>
                     </Suspense>
                 )}>
@@ -45,6 +46,7 @@ ReactDOM.createRoot(root).render(
                     <Route path='profile' element={<UserProfilePage/>}/>
                 </Route>
             </Route>
+            <Route path='*' element={<NotFoundPage/>}/>
         </Routes>
     </BrowserRouter>
 )

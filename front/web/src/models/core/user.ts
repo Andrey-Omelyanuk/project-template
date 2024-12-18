@@ -1,5 +1,5 @@
 import { Model, model, field } from 'mobx-orm'
-import { api } from '@/services'
+import { api } from '@/services/http-adapter'
 
 
 @api('user')

@@ -33,18 +33,17 @@ class SettingsViewSet(ViewSet):
     def list(self, request, format=None):
         _settings = {}
         _settings['DEBUG'] = settings.DEBUG
-        _settings['DOMAIN'] = os.environ.get('DOMAIN')
         _settings['RELEASE_VERSION'] = os.environ.get('RELEASE_VERSION')
-        _settings['ALLOWED_HOSTS'] = settings.ALLOWED_HOSTS
-        _settings['CSRF_TRUSTED_ORIGINS'] = settings.CSRF_TRUSTED_ORIGINS
-        _settings['SESSION_COOKIE_DOMAIN'] = settings.SESSION_COOKIE_DOMAIN
-        _settings['CSRF_COOKIE_DOMAIN'] = settings.CSRF_COOKIE_DOMAIN
-        _settings['SESSION_COOKIE_DOMAIN'] = settings.SESSION_COOKIE_DOMAIN
+        # _settings['DOMAIN'] = os.environ.get('DOMAIN')
+        # _settings['ALLOWED_HOSTS'] = settings.ALLOWED_HOSTS
+        # _settings['CSRF_TRUSTED_ORIGINS'] = settings.CSRF_TRUSTED_ORIGINS
+        # _settings['SESSION_COOKIE_DOMAIN'] = settings.SESSION_COOKIE_DOMAIN
+        # _settings['CSRF_COOKIE_DOMAIN'] = settings.CSRF_COOKIE_DOMAIN
+        # _settings['SESSION_COOKIE_DOMAIN'] = settings.SESSION_COOKIE_DOMAIN
         return Response(_settings)
 
 
 class MeViewSet(ViewSet):
-    permission_classes = [AllowAny]
     def list(self, request, format=None):
         me = {}
         if request.user.is_authenticated:

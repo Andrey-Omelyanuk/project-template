@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { User } from '@/models/core'
-import { me } from '@/services'
+import me from '@/services/me'
 
 
 const UserProfilePage = observer(() => {

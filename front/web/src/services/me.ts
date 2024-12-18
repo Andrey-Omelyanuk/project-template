@@ -1,7 +1,6 @@
 import { makeObservable, observable, runInAction } from 'mobx'
 import { waitIsTrue } from 'mobx-orm'
 import http from './http'
-import settings from './settings'
 
 const ORG_USER_ID = 'org-user-id'
 
@@ -22,11 +21,9 @@ class Me {
 
     constructor () {
         makeObservable(this)
-        this.init()
     }
 
-    private async init () {
-        await settings.ready()
+    async init () {
         try {
             const response = await http.get('me/')
             runInAction(() => {

@@ -14,7 +14,8 @@ class Settings {
     readonly DEBUG :boolean = false 
 
     // backend settings
-    API_DEBUG :boolean = false
+    API_DEBUG   :boolean = false
+    API_VERSION :string  = '-' 
 
     constructor () {
         makeObservable(this)
@@ -26,6 +27,7 @@ class Settings {
         try {
             const response = await http.get('/settings/')
             this.API_DEBUG = response.data.DEBUG
+            this.API_VERSION = response.data.RELEASE_VERSION
         }
         catch (e: any) {
             this.error = e.message
