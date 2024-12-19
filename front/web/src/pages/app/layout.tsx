@@ -13,7 +13,7 @@ const init = async () => {
     const preload  = [timeout(1000), ] // stay on loading screen for 1s for remove flicker 
     await me.init()
     if (me.user_id !== null && me.user_id !== undefined) {
-        await pub_sub.init()
+        // await pub_sub.init()
         const userQuery = User.getQuery({
             filter: EQ('id', NumberInput({value: me.user_id})),
             autoupdate: true

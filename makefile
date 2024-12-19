@@ -45,3 +45,4 @@ makemigrations-empty:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec back-main python manage.py makemigrations source --name new_empty --empty
 migrate:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec back-main python manage.py migrate 
+

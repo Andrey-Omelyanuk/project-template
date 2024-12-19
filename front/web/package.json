@@ -13,6 +13,9 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@mui/material"     : "^6.2.1",
+    "@emotion/react"    : "^11.14.0",
+    "@emotion/styled"   : "^11.14.0",
     "@blueprintjs/core"     : "^5.16.2",
     "@blueprintjs/datetime2": "^2.3.19", 
     "@blueprintjs/icons"    : "^5.16.0", 

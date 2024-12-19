@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     # 'allath.socialaccount.providers.openid_connect',
     # internal apps
     'apps.core',
+    'apps.org',
 ]
 
 

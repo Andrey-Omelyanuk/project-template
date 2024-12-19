@@ -1,10 +1,16 @@
 
 - auth
-- UI based on Blueprint.js
-- UI mobile first
-- UI: React Suspend and use()
-- UI: dart theme
+    - styles for login/logout pages
+    - logout button
+- UI: dark theme
 - show setting on the web page
 - show users   on the web page
-- run celery task & show progress and final result
 - events calendar
+- org - permissions 
+- notifications
+- user profile
+    - set avatar
+    - change other things
+- change the org if I hame many
+- UI: tasks in org 
+    - run celery task & show progress and final result

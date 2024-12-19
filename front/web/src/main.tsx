@@ -7,7 +7,7 @@ import '@blueprintjs/datetime2/lib/css/blueprint-datetime2.css'
 import { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { FocusStyleManager } from '@blueprintjs/core'
+import { FocusStyleManager, Icon } from '@blueprintjs/core'
 import LandingPage from './pages/public/landing.tsx'
 import PublicLayout from './pages/public/layout.tsx'
 import PricingPage from './pages/public/prices.tsx'
@@ -20,6 +20,10 @@ const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
 const UsersPage         = lazy(() => import('./pages/app/users.tsx'))
 const UserProfilePage   = lazy(() => import('./pages/app/user-profile.tsx'))
 const root = document.getElementById('root')
+
+import { IconNames, Icons, IconSize } from "@blueprintjs/icons"
+Icons.load(IconNames.TREE, IconSize.LARGE)
+Icons.load(IconNames.USER, IconSize.LARGE)
 
 FocusStyleManager.onlyShowFocusOnTabs()
 

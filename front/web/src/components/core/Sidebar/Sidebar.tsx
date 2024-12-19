@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Alignment, Icon, Navbar, NavbarGroup, Tree, TreeNodeInfo } from '@blueprintjs/core'
 import { IconNames, IconSize } from '@blueprintjs/icons'
-import { useLocation, useNavigate } from 'react-router'
+import { NavLink, useLocation, useNavigate } from 'react-router'
+import me from '@/services/me'
 
 
 const menu : TreeNodeInfo[] = [
@@ -45,6 +46,11 @@ const Sidebar = observer((props: LeftSidebarProps) => {
                 </NavbarGroup>
             </Navbar>
             <Tree contents={menu} onNodeClick={handleNodeClick} className='border-x-2 flex-auto'/>
+            <NavLink to='/profile' className='border-x-2 border-t-2 h-12 flex items-center p-4'>
+                <Icon icon={IconNames.USER} size={IconSize.LARGE} />
+                <h4 className='pl-3'>{me.user_id} {me.org_user_id}</h4>
+
+            </NavLink>
         </div>
     )
 })
