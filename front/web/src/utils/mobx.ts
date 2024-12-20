@@ -1,33 +1,36 @@
 /* eslint react-hooks/exhaustive-deps: 0 */ 
 import { useMemo, useEffect } from 'react'
 import { Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs, ObjectForm, Input } from 'mobx-orm'
+import { ModelForm } from './form'
 
 /**
  *  Hooks for uging mobx-orm inputs and queries
  */
 
+
+enum QueryType {
+    QUERY           = 'getQuery',
+    QUERY_PAGE      = 'getQueryPage',
+    QUERY_RAW       = 'getQueryRaw',
+    QUERY_RAW_PAGE  = 'getQueryRawPage'
+}
+const makeQuery = <M extends typeof Model>(model: M, queryType: QueryType, options?: QueryProps<InstanceType<M>>) => {
+    const query = useMemo(() => model[queryType](options), [])
+    const ready = useMemo(() => query.ready(), [])  // invoke at FIRST time query loaded
+    useEffect(() => () => query.destroy(), [])
+    return [query, ready]
+}
 export const useQuery = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    const query = useMemo(() => model.getQuery(options), [])
-    useEffect(() => () => query.destroy(), [])
-    return query
+    return makeQuery(model, QueryType.QUERY, options)
 }
-
 export const useQueryPage = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    const query = useMemo(() => model.getQueryPage(options), [])
-    useEffect(() => () => query.destroy(), [])
-    return query
+    return makeQuery(model, QueryType.QUERY_PAGE, options)
 }
-
 export const useQueryRaw = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    const query = useMemo(() => model.getQueryRaw(options), [])
-    useEffect(() => () => query.destroy(), [])
-    return query
+    return makeQuery(model, QueryType.QUERY_RAW, options)
 }
-
 export const useQueryRawPage = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    const query = useMemo(() => model.getQueryRawPage(options), [])
-    useEffect(() => () => query.destroy(), [])
-    return query
+    return makeQuery(model, QueryType.QUERY_RAW_PAGE, options)
 }
 
 export const useInput = <T>(
@@ -60,10 +63,11 @@ export const useObjectInput = (
     return input
 }
 
-export const useObjectForm = <M extends Model>(inputs, onSubmitted?, onCancelled?) => {
-    const form = useMemo(() => new ObjectForm<M>(inputs, onSubmitted, onCancelled), [])
-    // useEffect(() => {
-    //     return () => form.destroy()
-    // } , [])
-    return form 
+export const useModelForm = <T extends Model> (builder: ()=> ModelForm<T>) => {
+    const form = useMemo(builder, [])
+    useEffect(() => {
+        return () => form.destroy()
+    } , [])
+    return form
 }
+

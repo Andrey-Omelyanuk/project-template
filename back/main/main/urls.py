@@ -7,7 +7,6 @@ from rest_framework import routers
 from apps.core.rest.router import core
 from apps.org.rest.router import org
 
-
 router = routers.DefaultRouter(trailing_slash=True)
 core (router)
 org  (router)

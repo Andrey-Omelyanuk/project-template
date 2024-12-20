@@ -2,8 +2,10 @@ import axios from 'axios'
 
 axios.defaults.xsrfHeaderName   = 'X-CSRFToken'
 axios.defaults.xsrfCookieName   = 'csrftoken'
+axios.defaults.withXSRFToken    = true
 axios.defaults.withCredentials  = true
 axios.defaults.baseURL          = `http://main.${window.location.hostname}/api`
+
 axios.interceptors.response.use(
     (response) => response,
     (error) => {

@@ -2,6 +2,8 @@ import jwt
 import os
 import time
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
@@ -81,4 +83,3 @@ class SubscriptionJWTViewSet(ViewSet):
         }
         token = jwt.encode(token_claims, settings.CENTRIFUGO_TOKEN_SECRET)
         return Response({'token': token})
-

@@ -8,6 +8,12 @@ SITE_ID = 1
 ALLOWED_HOSTS           = [f".{os.environ['DOMAIN']}", ]
 SESSION_COOKIE_DOMAIN   =  f".{os.environ['DOMAIN']}"
 CSRF_COOKIE_DOMAIN      =  f".{os.environ['DOMAIN']}"
+CSRF_TRUSTED_ORIGINS    = [
+    f"http://{os.environ['DOMAIN']}",
+    f"https://{os.environ['DOMAIN']}",
+    f"http://*.{os.environ['DOMAIN']}",
+    f"https://*.{os.environ['DOMAIN']}"
+]
 CORS_ALLOW_CREDENTIALS  = True
 CORS_ALLOW_ALL_ORIGINS  = True
 
