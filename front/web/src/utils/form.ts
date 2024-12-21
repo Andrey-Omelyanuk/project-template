@@ -1,17 +1,13 @@
+import { ru } from 'date-fns/locale'
 import { observable, action, runInAction} from 'mobx'
 import { config, Input, Model } from 'mobx-orm'
 
 
 export class ModelForm<T extends Model> {
-    readonly    obj         : T
-    readonly    inputs      : { [key: string]: Input<any> }
+    readonly    inputs      : { [key: string]: Input<any> } = {}
+    private     obj         : T
     @observable isLoading   : boolean = false
     @observable errors      : string[] = []
-
-    constructor(obj: T) {
-        this.obj = obj
-        this.inputs = {}
-    }
 
     destroy() {
         for (const key in this.inputs) {
@@ -19,24 +15,39 @@ export class ModelForm<T extends Model> {
         }
     }
 
-    get isReady(): boolean {
-        return Object.values(this.inputs).every(input => input.isReady)
+    setObj(obj: T) {
+        this.obj = obj
+        for (const key in this.inputs) {
+            if (this.obj[key] !== undefined) {
+                // set the input value from obj
+                this.inputs[key].value = this.obj[key]
+            }
+            else {
+                // clear the input
+                this.inputs[key].setFromString('')
+            }
+        }
+    }
+    getObj() {
+        return this.obj
     }
 
-    get isError(): boolean {
-        return this.errors.length > 0 || Object.values(this.inputs).some(input => input.errors.length > 0)
+    get isReady(): boolean {
+        return Object.values(this.inputs).every(input => input.isReady)
     }
 
     @action
     async submit() {
         if (!this.isReady) return   // just ignore
-        this.isLoading = true
-        this.errors = []
 
-        // move values from inputs to obj
-        for(const key in this.inputs) {
-            this.obj[key] = this.inputs[key].value
-        }
+        runInAction(() => {
+            this.isLoading = true
+            this.errors = []
+            // move values from inputs to obj
+            for(const key in this.inputs) {
+                this.obj[key] = this.inputs[key].value
+            }
+        })
 
         try {
             await this.obj.save() 

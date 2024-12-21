@@ -1,8 +1,10 @@
-import { Card, CardList, Section, SectionCard } from '@blueprintjs/core'
+import { Button, Card, CardList, Classes, Icon, Section, SectionCard } from '@blueprintjs/core'
 import { QueryPage, NumberInput as NumberModelInput } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
 import { Org } from '@/models/org'
 import { useInput } from '@/utils'
+import { ChevronRight, IconNames } from '@blueprintjs/icons'
+import { DeleteObjectButton } from '@/components/core/inputs/DeleteObject:wButton'
 
 
 export interface OrgListProps {
@@ -23,7 +25,15 @@ const OrgList = observer((props: OrgListProps) => {
                 <CardList>
                     { orgs.items.length === 0 && <Card>No Orgs</Card> }
                     { orgs.items.map( org =>
-                        <Card interactive={true} selected={orgInput.value === org.id}>{org.name}</Card>
+                        <Card key={org.id}
+                            interactive={true}
+                            selected={orgInput.value === org.id}
+                            onClick={() => orgInput.set(org.id as number)}
+                            className='flex items-center justify-between'
+                        >
+                            {org.name}
+                            <DeleteObjectButton obj={org} onDeleted={() => orgs.load()}/>
+                        </Card>
                     )}
                 </CardList>
             </SectionCard>

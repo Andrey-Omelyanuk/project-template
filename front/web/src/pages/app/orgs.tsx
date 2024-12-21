@@ -16,19 +16,18 @@ const OrgsPage = observer(() => {
     }) as [QueryPage<Org>, Promise<void>]
     use(ready)
 
-    useEffect(() => {
-        autorun(() => {
-            console.log('Orgs:', orgs?.items)
-        })
-    }, [orgs])
+    // useEffect(() => {
+    //     autorun(() => {
+    //         console.log('Orgs:', orgs?.items)
+    //     })
+    // }, [orgs])
     
     return (
         <Page>
-            <div>
-                <div>{orgs?.items.length}</div>
-            </div>
             <OrgList orgs={orgs}/>
-            <OrgCreate onCreated={() => orgs.load()}/>
+            <div className='m-4'>
+                <OrgCreate onCreated={() => orgs.load()}/>
+            </div>
         </Page>
     )
 })

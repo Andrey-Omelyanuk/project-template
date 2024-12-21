@@ -9,8 +9,9 @@ import { StringInputView } from '@/components/core/inputs'
 
 export class CreateOrgForm extends ModelForm<Org> {
     constructor(obj: Org) {
-        super(obj)
+        super()
         this.inputs['name'] = StringInput({value: obj.name})
+        this.setObj(obj)
     }
 }
 
@@ -24,17 +25,26 @@ const OrgCreate = observer((props: OrgCreateProps) => {
     const form = useModelForm(() => new CreateOrgForm(new Org()))
 
     const submit = async () => {
-        await form.submit()
-        if (!form.isError && onCreated) {
-            onCreated(form.obj)
+        try {
+            await form.submit()
+            if (!form.errors.length) {
+                form.setObj(new Org())
+                onCreated && onCreated(form.getObj())
+            }
+        }
+        catch (e) {
+            console.error('Failed to create org', e)
         }
     }
-
     return (
+        <div>
         <ControlGroup>
-            <StringInputView input={form.inputs.name}/>
-            <Button intent="success" icon="add" text="Add" onClick={submit}/>
+            <StringInputView input={form.inputs.name} placeholder='Name of Organization' onPressEnter={submit}  />
+            {/* Loading process */}
+            <Button intent="success" icon="add" text="Create" onClick={submit}/>
         </ControlGroup>
+
+        </div>
     )
 })
 
