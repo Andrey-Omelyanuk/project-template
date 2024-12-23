@@ -1,13 +1,29 @@
-import { ru } from 'date-fns/locale'
-import { observable, action, runInAction} from 'mobx'
-import { config, Input, Model } from 'mobx-orm'
+import { observable, action, runInAction, makeAutoObservable} from 'mobx'
+import { config, Input, Model, timeout } from 'mobx-orm'
 
 
+export enum ModelFormAction {
+    SAVE = 1,
+    DELETE = 2,
+}
+
+// DON'T extended the ModelFrom class
+// it's MobX limitation, observable would not work in the super class
 export class ModelForm<T extends Model> {
     readonly    inputs      : { [key: string]: Input<any> } = {}
     private     obj         : T
+    readonly    action      : ModelFormAction
+    readonly    onSuccess   : () => any
+    readonly    onError     : () => any
     @observable isLoading   : boolean = false
     @observable errors      : string[] = []
+
+    constructor(action?: ModelFormAction, onSuccess?:() => any, onError?: () => any) {
+        this.action = action ? action : ModelFormAction.SAVE
+        this.onSuccess = onSuccess
+        this.onError = onError
+        makeAutoObservable(this)
+    }
 
     destroy() {
         for (const key in this.inputs) {
@@ -50,7 +66,11 @@ export class ModelForm<T extends Model> {
         })
 
         try {
-            await this.obj.save() 
+            await timeout(2000)
+            this.action === ModelFormAction.SAVE
+                ? await this.obj.save()
+                : await this.obj.delete() 
+            this.onSuccess && this.onSuccess()
         }
         catch (err) {
             // handle errors
@@ -64,11 +84,10 @@ export class ModelForm<T extends Model> {
                         throw err
                 }
             }
+            this.onError && this.onError()
         }
         finally {
             runInAction(() => this.isLoading = false)
         }
     }
 }
-
-

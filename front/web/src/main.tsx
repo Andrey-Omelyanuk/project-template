@@ -22,6 +22,7 @@ const UserProfilePage   = lazy(() => import('./pages/app/user-profile.tsx'))
 const root = document.getElementById('root')
 
 import { IconNames, Icons, IconSize } from "@blueprintjs/icons"
+import OrgPage from './pages/app/org.tsx'
 Icons.load(IconNames.TREE, IconSize.LARGE)
 Icons.load(IconNames.USER, IconSize.LARGE)
 
@@ -44,10 +45,11 @@ ReactDOM.createRoot(root).render(
                         <BaseLayout/>
                     </Suspense>
                 )}>
-                    <Route index          element={<DashboardPage/>}/>
-                    <Route path='users'   element={<UsersPage/>}/>
-                    <Route path='orgs'    element={<OrgsPage/>}/>
-                    <Route path='profile' element={<UserProfilePage/>}/>
+                    <Route index           element={<DashboardPage/>}/>
+                    <Route path='users'    element={<UsersPage/>}/>
+                    <Route path='orgs'     element={<OrgsPage/>}/>
+                    <Route path='org/:org' element={<OrgPage/>}/>
+                    <Route path='profile'  element={<UserProfilePage/>}/>
                 </Route>
             </Route>
             <Route path='*' element={<NotFoundPage/>}/>

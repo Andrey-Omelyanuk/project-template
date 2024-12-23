@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'apps.org.middleware.OrgUserMiddleware',
 ]
 
 ROOT_URLCONF = 'main.urls'

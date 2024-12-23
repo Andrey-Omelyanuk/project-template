@@ -7,23 +7,19 @@ import { useModelForm } from '@/utils'
 import { StringInputView } from '@/components/core/inputs'
 
 
-export class CreateOrgForm extends ModelForm<Org> {
-    constructor(obj: Org) {
-        super()
-        this.inputs['name'] = StringInput({value: obj.name})
-        this.setObj(obj)
-    }
-}
-
 export interface OrgCreateProps {
     onCreated?: (org: Org) => void
 }
 
 const OrgCreate = observer((props: OrgCreateProps) => {
     const { onCreated } = props
-
-    const form = useModelForm(() => new CreateOrgForm(new Org()))
-
+    const form = useModelForm(() => {
+        const form = new ModelForm<Org>()
+        const obj = new Org()
+        form.inputs['name'] = StringInput({value: obj.name})
+        form.setObj(obj)
+        return form
+    })
     const submit = async () => {
         try {
             await form.submit()
@@ -36,15 +32,12 @@ const OrgCreate = observer((props: OrgCreateProps) => {
             console.error('Failed to create org', e)
         }
     }
-    return (
-        <div>
-        <ControlGroup>
-            <StringInputView input={form.inputs.name} placeholder='Name of Organization' onPressEnter={submit}  />
-            {/* Loading process */}
-            <Button intent="success" icon="add" text="Create" onClick={submit}/>
-        </ControlGroup>
 
-        </div>
+    return (
+        <ControlGroup>
+            <StringInputView disabled={form.isLoading} input={form.inputs.name} placeholder='Name of Organization' onPressEnter={submit} />
+            <Button intent="success" icon="add" text="Create" onClick={submit} loading={form.isLoading}/>
+        </ControlGroup>
     )
 })
 

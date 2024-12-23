@@ -1,6 +1,7 @@
 from rest_framework.serializers import PrimaryKeyRelatedField, CharField, IntegerField, ValidationError, BooleanField
 from apps.core.rest.serializers import CoreModelSerializer
 from django.contrib.auth import get_user_model
+from apps.core.rest.serializers import UserSerializer
 from ..models import *
 User = get_user_model()
 
@@ -19,10 +20,13 @@ __all__ = [
 class OrgSerializer(CoreModelSerializer):
     class Meta:
         model = Org
-        fields = '__all__'
-        # expandable_fields = {
-        #     'org-users': CompanyFeaturesSerializer,
-        # }
+        # fields = '__all__'
+        exclude = ()
+        # fields = ('id', 'name', 'is_active', 'org_users', 'org_user_groups')
+        expandable_fields = {
+            'org_users': ('apps.org.rest.OrgUserSerializer', {'many': True}),
+            'org_user_groups': ('apps.org.rest.OrgUserGroupSerializer', {'many': True}),
+        }
 
 
 class OrgHistorySerializer(CoreModelSerializer):
@@ -32,9 +36,6 @@ class OrgHistorySerializer(CoreModelSerializer):
     class Meta:
         model = Org.history.model
         exclude = ('history_id', 'history_user', )
-        # expandable_fields = {
-        #     'company': CompanySerializer,
-        # }
 
 
 
@@ -44,6 +45,9 @@ class OrgUserSerializer(CoreModelSerializer):
     class Meta:
         model = OrgUser
         exclude = ('org', 'user', )
+        expandable_fields = {
+            'user': 'apps.core.rest.UserSerializer',
+        }
 
 
 class OrgUserHistorySerializer(CoreModelSerializer):

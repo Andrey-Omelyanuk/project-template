@@ -5,13 +5,15 @@ import { InputGroup, Label } from '@blueprintjs/core'
 
 export interface StringInputViewProps {
     input        : Input<string> 
+    disabled    ?: boolean 
     label       ?: string
     placeholder ?: string
     onPressEnter?: () => void
+    autoFocus   ?: boolean
 }
 
 export const StringInputView = observer((props: StringInputViewProps) => {
-    const { input, label, placeholder, onPressEnter } = props
+    const { input, disabled = false, label, placeholder, onPressEnter, autoFocus } = props
 
     const onChange = (value: string) => {
         input.set(value)
@@ -28,10 +30,12 @@ export const StringInputView = observer((props: StringInputViewProps) => {
             <Label>
                 {label}
                 <InputGroup
+                    autoFocus={autoFocus}
                     value={input.value}
                     onValueChange={onChange}
                     placeholder={placeholder}
                     onKeyDown={handleKeyDown}
+                    disabled={disabled}
                 />
             </Label>
         )
@@ -42,6 +46,7 @@ export const StringInputView = observer((props: StringInputViewProps) => {
                 onValueChange={onChange}
                 placeholder={placeholder}
                 onKeyDown={handleKeyDown}
+                disabled={disabled}
             />
         )
     }

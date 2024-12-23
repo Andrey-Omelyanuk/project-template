@@ -19,4 +19,4 @@ export class OrgUserGroup extends Model {
 }
 foreign(OrgUserGroup, 'parent_id')(OrgUserGroup.prototype, 'parent')
 many(OrgUserGroup, 'parent_id')(OrgUserGroup, 'children')
-many(OrgUserGroup, 'company_id')(Org, 'org_user_groups')
+many(OrgUserGroup, 'org_id')(Org, 'org_user_groups')

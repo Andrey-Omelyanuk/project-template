@@ -1,4 +1,4 @@
-import { Model, Adapter, Query, Filter, Repository } from 'mobx-orm'
+import { Model, Adapter, Query, Filter, Repository, timeout } from 'mobx-orm'
 
 import http from './http'
 
@@ -95,7 +95,7 @@ export class HttpAdapter<M extends Model> extends Adapter<M> {
             this.endpoint + `?${queryParams.toString()}`,
             { signal: controller?.signal },
         )
-        // await timeout(500) 
+        // await timeout(2000) 
         return response.data
     }
 

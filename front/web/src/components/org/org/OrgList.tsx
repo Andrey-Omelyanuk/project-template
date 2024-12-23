@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { Org } from '@/models/org'
 import { useInput } from '@/utils'
 import { ChevronRight, IconNames } from '@blueprintjs/icons'
-import { DeleteObjectButton } from '@/components/core/inputs/DeleteObject:wButton'
+import { DeleteObjectButton } from '@/components/core/inputs/DeleteObjectButton'
 
 
 export interface OrgListProps {
@@ -23,18 +23,22 @@ const OrgList = observer((props: OrgListProps) => {
         <Section title="Organizations">
             <SectionCard padded={false}>
                 <CardList>
-                    { orgs.items.length === 0 && <Card>No Orgs</Card> }
-                    { orgs.items.map( org =>
-                        <Card key={org.id}
-                            interactive={true}
-                            selected={orgInput.value === org.id}
-                            onClick={() => orgInput.set(org.id as number)}
-                            className='flex items-center justify-between'
-                        >
-                            {org.name}
-                            <DeleteObjectButton obj={org} onDeleted={() => orgs.load()}/>
-                        </Card>
-                    )}
+                    { orgs.isLoading 
+                        ? <div> Loading... </div>
+                        : orgs.items.length === 0
+                            ? <Card>No Orgs</Card>
+                            : orgs.items.map( org =>
+                                <Card key={org.id}
+                                    interactive={true}
+                                    selected={orgInput.value === org.id}
+                                    onClick={() => orgInput.set(org.id as number)}
+                                    className='flex items-center justify-between'
+                                >
+                                    {org.name}
+                                    <DeleteObjectButton obj={org} onDeleted={() => orgs.load()}/>
+                                </Card>
+                            )
+                    }
                 </CardList>
             </SectionCard>
         </Section>

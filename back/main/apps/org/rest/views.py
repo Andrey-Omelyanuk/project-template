@@ -1,5 +1,8 @@
+from rest_framework.response import Response
+from rest_framework import status
 from apps.core.rest.views import CoreModelViewSet, CoreReadOnlyModelViewSet
 from ..models import *
+from ..actions import user_create_org
 from .serializers import * 
 
 
@@ -17,8 +20,16 @@ __all__ = [
 class OrgViewSet(CoreModelViewSet):
     serializer_class = OrgSerializer
     def get_queryset(self):
-        """ Any authenticated user can see all organizations. """
-        return Org.objects.all()
+        """ User can see only organizations where he is a member. """
+        return Org.objects.filter(org_users__user=self.request.user)
+
+    def perform_create(self, serializer):
+        """ Overwrite creation to add custom logic. """
+        org, _, _, _ = user_create_org(
+            self.request.user.id,
+            serializer.validated_data['name']
+        )
+        serializer.instance = org
 
 
 class OrgHistoryListView(CoreReadOnlyModelViewSet):

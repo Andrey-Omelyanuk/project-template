@@ -36,8 +36,8 @@ class Org(Model):
 
 class OrgUser(Model):
     """ User in Organization """ 
-    org         = ForeignKey(Org , on_delete=CASCADE)
-    user        = ForeignKey(User, on_delete=CASCADE)
+    org         = ForeignKey(Org , on_delete=CASCADE, related_name='org_users')
+    user        = ForeignKey(User, on_delete=CASCADE, related_name='org_users')
     is_active   = BooleanField(default=True)
 
     history = HistoricalRecords()
@@ -51,8 +51,8 @@ class OrgUser(Model):
 
 class OrgUserGroup(MPTTModel):
     """ Hierarchical groups in Organization """ 
-    org     = ForeignKey    (Org    , on_delete=CASCADE, null=False, blank=True)
-    parent  = TreeForeignKey('self' , on_delete=CASCADE, null=True , blank=True, related_name='children')
+    org     = ForeignKey    (Org   , on_delete=CASCADE, null=False, blank=True, related_name='org_user_groups')
+    parent  = TreeForeignKey('self', on_delete=CASCADE, null=True , blank=True, related_name='children')
     name    = CharField(max_length=32)
 
     class Meta:
@@ -74,7 +74,7 @@ class OrgUserInOrgUserGroup(Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.org_group} :: {self.org_user} :: {self.level}"
+        return f"{self.org_user_group} :: {self.org_user} :: {self.level}"
 
     class Meta:
         unique_together = (('org_user_group', 'org_user'), )

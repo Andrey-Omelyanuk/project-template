@@ -1,6 +1,10 @@
 from django.db import transaction
-from models import Org, OrgUser, OrgUserGroup, OrgUserInOrgUserGroup, AccessLevel
+from .models import *
 
+
+__all__ = [
+    'user_create_org',
+]
 
 @transaction.atomic
 def user_create_org(user_id: int, name: str):
@@ -8,9 +12,6 @@ def user_create_org(user_id: int, name: str):
     org.save()
     # root group has name as org
     org_user_group = OrgUserGroup(org=org, name=name)
-    org_user_group.save()
-    # parent of root is himself
-    org_user_group.parent = org_user_group.id
     org_user_group.save()
     # make user an admin(it's equal as owner) of organization
     org_user = OrgUser(user_id=user_id, org_id=org.id)
@@ -22,4 +23,4 @@ def user_create_org(user_id: int, name: str):
     )
     org_user_in_org_user_group.save()
 
-    return org, org_user, org_user_group, org_user_group
+    return org, org_user, org_user_group, org_user_in_org_user_group

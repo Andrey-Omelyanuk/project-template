@@ -1,33 +1,29 @@
-import { Suspense, use, useEffect, useMemo } from 'react'
+import { use } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Page } from '@/components/core/Page'
-import { useQuery, useQueryPage } from '@/utils'
+import { useQueryPage } from '@/utils'
 import { Org } from '@/models/org'
-import { QueryPage, timeout } from 'mobx-orm'
+import { ArrayStringInput, QueryPage } from 'mobx-orm'
 import OrgList from '@/components/org/org/OrgList'
 import OrgCreate from '@/components/org/org/OrgCreate'
-import { autorun } from 'mobx'
+import OrgUserGroupTree from '@/components/org/org/OrgUserGroupTree'
 
 
 const OrgsPage = observer(() => {
 
     const [orgs, ready] = useQueryPage(Org, {
-        autoupdate: true
+        autoupdate: true,
+        relations   : ArrayStringInput({ value: ['org_users.user', 'org_user_groups']}), 
     }) as [QueryPage<Org>, Promise<void>]
     use(ready)
-
-    // useEffect(() => {
-    //     autorun(() => {
-    //         console.log('Orgs:', orgs?.items)
-    //     })
-    // }, [orgs])
     
     return (
         <Page>
-            <OrgList orgs={orgs}/>
             <div className='m-4'>
-                <OrgCreate onCreated={() => orgs.load()}/>
+                <OrgCreate onCreated={() => orgs.shadowLoad()}/>
             </div>
+            <OrgList orgs={orgs}/>
+            <OrgUserGroupTree orgs={orgs}/>
         </Page>
     )
 })
