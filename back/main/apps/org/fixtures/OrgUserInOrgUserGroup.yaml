@@ -1,0 +1,36 @@
+- model: org.orguserinorgusergroup
+  pk: 1
+  fields:
+    org_user_group: 1
+    org_user: 1
+    level: 30
+- model: org.orguserinorgusergroup
+  pk: 2
+  fields:
+    org_user_group: 2
+    org_user: 2
+    level: 30
+- model: org.orguserinorgusergroup
+  pk: 3
+  fields:
+    org_user_group: 3
+    org_user: 3
+    level: 30
+- model: org.orguserinorgusergroup
+  pk: 4
+  fields:
+    org_user_group: 4
+    org_user: 4
+    level: 30
+- model: org.orguserinorgusergroup
+  pk: 5
+  fields:
+    org_user_group: 5
+    org_user: 5
+    level: 30
+- model: org.orguserinorgusergroup
+  pk: 6
+  fields:
+    org_user_group: 6
+    org_user: 6
+    level: 30

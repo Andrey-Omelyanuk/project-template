@@ -1,0 +1,30 @@
+- model: org.org
+  pk: 1
+  fields:
+    name: Org A
+    is_active: true
+- model: org.org
+  pk: 2
+  fields:
+    name: Org B
+    is_active: true
+- model: org.org
+  pk: 3
+  fields:
+    name: Org C
+    is_active: true
+- model: org.org
+  pk: 4
+  fields:
+    name: Org D
+    is_active: true
+- model: org.org
+  pk: 5
+  fields:
+    name: Org E
+    is_active: true
+- model: org.org
+  pk: 6
+  fields:
+    name: Org F
+    is_active: true

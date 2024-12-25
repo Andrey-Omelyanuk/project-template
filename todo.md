@@ -11,8 +11,7 @@
 - user profile
     - set avatar
     - change other things
-- change the org if I hame many
+- UI: current org-user
 - UI: tasks in org 
     - run celery task & show progress and final result
-- UI: org-user-group tree
 - UI: move ModelFrom into MobX-ORM

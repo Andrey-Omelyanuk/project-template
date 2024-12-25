@@ -1,0 +1,60 @@
+- model: org.orgusergroup
+  pk: 1
+  fields:
+    org: 1
+    parent: null
+    name: Org A
+    lft: 1
+    rght: 2
+    tree_id: 1
+    level: 0
+- model: org.orgusergroup
+  pk: 2
+  fields:
+    org: 2
+    parent: null
+    name: Org B
+    lft: 1
+    rght: 2
+    tree_id: 2
+    level: 0
+- model: org.orgusergroup
+  pk: 3
+  fields:
+    org: 3
+    parent: null
+    name: Org C
+    lft: 1
+    rght: 2
+    tree_id: 3
+    level: 0
+- model: org.orgusergroup
+  pk: 4
+  fields:
+    org: 4
+    parent: null
+    name: Org D
+    lft: 1
+    rght: 2
+    tree_id: 4
+    level: 0
+- model: org.orgusergroup
+  pk: 5
+  fields:
+    org: 5
+    parent: null
+    name: Org E
+    lft: 1
+    rght: 2
+    tree_id: 5
+    level: 0
+- model: org.orgusergroup
+  pk: 6
+  fields:
+    org: 6
+    parent: null
+    name: Org F
+    lft: 1
+    rght: 2
+    tree_id: 6
+    level: 0

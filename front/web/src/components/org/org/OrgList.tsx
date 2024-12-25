@@ -1,33 +1,26 @@
-import { Button, Card, CardList, Classes, Icon, Section, SectionCard } from '@blueprintjs/core'
-import { QueryPage, NumberInput as NumberModelInput } from 'mobx-orm'
+import { Card, CardList, Section, SectionCard } from '@blueprintjs/core'
+import { QueryPage, Input, ObjectInput } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
 import { Org } from '@/models/org'
-import { useInput } from '@/utils'
-import { ChevronRight, IconNames } from '@blueprintjs/icons'
 import { DeleteObjectButton } from '@/components/core/inputs/DeleteObjectButton'
 
 
 export interface OrgListProps {
-    orgs: QueryPage<Org> 
+    orgInput: ObjectInput<Org>
 }
 
 const OrgList = observer((props: OrgListProps) => {
-    const { orgs } = props
-    const orgInput = useInput(NumberModelInput, { syncURL: 'org-id' }, true)
-
-    if (orgs === undefined) {
-        return <div>Loading...</div>
-    }
+    const { orgInput } = props
 
     return (
         <Section title="Organizations">
             <SectionCard padded={false}>
                 <CardList>
-                    { orgs.isLoading 
+                    { orgInput.options.isLoading 
                         ? <div> Loading... </div>
-                        : orgs.items.length === 0
+                        : orgInput.options.items.length === 0
                             ? <Card>No Orgs</Card>
-                            : orgs.items.map( org =>
+                            : orgInput.options.items.map( org =>
                                 <Card key={org.id}
                                     interactive={true}
                                     selected={orgInput.value === org.id}
@@ -35,7 +28,7 @@ const OrgList = observer((props: OrgListProps) => {
                                     className='flex items-center justify-between'
                                 >
                                     {org.name}
-                                    <DeleteObjectButton obj={org} onDeleted={() => orgs.load()}/>
+                                    <DeleteObjectButton obj={org} onDeleted={() => orgInput.options.load()}/>
                                 </Card>
                             )
                     }

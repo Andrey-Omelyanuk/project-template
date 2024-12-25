@@ -1,5 +1,5 @@
 import { Section, Tree, Card, Intent, Button, Icon, TreeNodeInfo } from '@blueprintjs/core'
-import { QueryPage, NumberInput as NumberModelInput } from 'mobx-orm'
+import { QueryPage, NumberInput as NumberModelInput, ObjectInput } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
 import { Org, OrgUserGroup } from '@/models/org'
 import { useInput } from '@/utils'
@@ -24,7 +24,7 @@ const OrgUserGroupTreeLabel = ((props: {group: OrgUserGroup, createNewGroup: (Or
                 <span onClick={(event) => { event.stopPropagation() }}>
                     {group.parent && <Button minimal={true} icon={IconNames.EDIT} onClick={() => setEdit(!edit)} />}
                     {group.parent && <DeleteObjectButton obj={group}/>}
-                    <Button minimal={true} icon={IconNames.ADD} intent={Intent.SUCCESS}
+                    <Button minimal={true} icon={IconNames.ADD} 
                         onClick={(event) => {
                             event.stopPropagation()
                             createNewGroup(group) 
@@ -36,19 +36,18 @@ const OrgUserGroupTreeLabel = ((props: {group: OrgUserGroup, createNewGroup: (Or
 })
 
 export interface OrgUserGroupTreeProps {
-    orgs: QueryPage<Org> 
+    groupInput: ObjectInput<OrgUserGroup> 
 }
 
 const OrgUserGroupTree = observer((props: OrgUserGroupTreeProps) => {
-    const { orgs } = props
-    const selectedGroupInput = useInput(NumberModelInput, { syncURL: 'org-user-group-id' }, true)
+    const { groupInput} = props
     const [tree, setTree] = useState([]) 
     const [update, setUpdate] = useState(false)
     const createNewGroup = useCallback((group: OrgUserGroup) => {
         // add flag to create child group
         (group as any).__createChild = true
         setUpdate(!update)
-    }, [orgs, update])
+    }, [groupInput, update])
 
     useEffect(() => {
         return autorun(() => {
@@ -59,9 +58,9 @@ const OrgUserGroupTree = observer((props: OrgUserGroupTreeProps) => {
                     id          : group.id,
                     hasCaret    : group.children.length > 0 || needToCreateChild, 
                     isExpanded  : true,
-                    isSelected  : selectedGroupInput.value === group.id,
+                    isSelected  : groupInput.value === group.id,
                     label       : <OrgUserGroupTreeLabel group={group} createNewGroup={createNewGroup}/>,
-                    icon        : group.parent_id ? IconNames.HOME : IconNames.PEOPLE,
+                    icon        : group.parent_id ? IconNames.PEOPLE: IconNames.BADGE,
                     childNodes  : [],
                     nodeData    : group
                 }
@@ -88,15 +87,14 @@ const OrgUserGroupTree = observer((props: OrgUserGroupTreeProps) => {
                 }
                 return treeNode
             }
-            for (const org of orgs.items) {
-                tree.push(buildTree (org.root_user_group))
-            }
+            if (groupInput.options.items.length)
+                tree.push(buildTree (groupInput.options.items[0]))
             setTree(tree)
         })
-    }, [orgs, update])
+    }, [groupInput, update])
 
     const handleNodeClick = (node: TreeNodeInfo<any>, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
-        selectedGroupInput.set(node.nodeData?.id === selectedGroupInput.value ? undefined : node.nodeData?.id)
+        groupInput.set(node.nodeData?.id === groupInput.value ? undefined : node.nodeData?.id)
     }
     const handleNodeCollapse = (_node: TreeNodeInfo, nodePath: NodePath) => {
         const node = Tree.nodeFromPath(nodePath, tree)
@@ -110,17 +108,15 @@ const OrgUserGroupTree = observer((props: OrgUserGroupTreeProps) => {
     }
 
     return (
-        <Section title="User Groups">
+        <Section title="Groups">
             <Card>
-                { orgs.isLoading 
-                    ? <div> Loading... </div>
-                    : orgs.items.length === 0
-                        ? <Card>No Orgs</Card>
-                        : <Tree contents={tree}
-                            onNodeClick     = {handleNodeClick}
-                            onNodeCollapse  = {handleNodeCollapse}
-                            onNodeExpand    = {handleNodeExpand}
-                        />
+                { groupInput.options.items.length === 0
+                    ? <Card>No Groups</Card>
+                    : <Tree contents={tree}
+                        onNodeClick     = {handleNodeClick}
+                        onNodeCollapse  = {handleNodeCollapse}
+                        onNodeExpand    = {handleNodeExpand}
+                    />
                 }
             </Card>
         </Section>

@@ -15,6 +15,12 @@ help:
 	@echo "log s=<name> - Show logs for <name> container"
 	@echo "sh  s=<name> - Enter to <name> container"
 
+	@echo test_data_dump
+	@echo test_data_reset
+	@echo makemigrations
+	@echo makemigrations-empty
+	@echo migrate
+
 
 init:
 	if [ ! -f "./.env" ]; 					then cp ./.env.example ./.env; fi

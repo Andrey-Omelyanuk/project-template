@@ -1,0 +1,36 @@
+- model: org.orguser
+  pk: 1
+  fields:
+    org: 1
+    user: 1
+    is_active: true
+- model: org.orguser
+  pk: 2
+  fields:
+    org: 2
+    user: 1
+    is_active: true
+- model: org.orguser
+  pk: 3
+  fields:
+    org: 3
+    user: 1
+    is_active: true
+- model: org.orguser
+  pk: 4
+  fields:
+    org: 4
+    user: 1
+    is_active: true
+- model: org.orguser
+  pk: 5
+  fields:
+    org: 5
+    user: 1
+    is_active: true
+- model: org.orguser
+  pk: 6
+  fields:
+    org: 6
+    user: 1
+    is_active: true
