@@ -34,3 +34,63 @@
     org: 6
     user: 1
     is_active: true
+- model: org.orguser
+  pk: 7
+  fields:
+    org: 1
+    user: 2
+    is_active: true
+- model: org.orguser
+  pk: 8
+  fields:
+    org: 1
+    user: 3
+    is_active: true
+- model: org.orguser
+  pk: 9
+  fields:
+    org: 1
+    user: 4
+    is_active: true
+- model: org.orguser
+  pk: 10
+  fields:
+    org: 1
+    user: 6
+    is_active: true
+- model: org.orguser
+  pk: 11
+  fields:
+    org: 1
+    user: 7
+    is_active: true
+- model: org.orguser
+  pk: 12
+  fields:
+    org: 1
+    user: 8
+    is_active: true
+- model: org.orguser
+  pk: 13
+  fields:
+    org: 1
+    user: 9
+    is_active: true
+- model: org.orguser
+  pk: 14
+  fields:
+    org: 2
+    user: 2
+    is_active: true
+- model: org.orguser
+  pk: 15
+  fields:
+    org: 2
+    user: 3
+    is_active: true
+- model: org.orguser
+  pk: 16
+  fields:
+    org: 2
+    user: 4
+    is_active: true
