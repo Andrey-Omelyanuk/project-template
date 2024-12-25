@@ -34,3 +34,51 @@
     org_user_group: 6
     org_user: 6
     level: 30
+- model: org.orguserinorgusergroup
+  pk: 7
+  fields:
+    org_user_group: 7
+    org_user: 7
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 8
+  fields:
+    org_user_group: 10
+    org_user: 8
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 9
+  fields:
+    org_user_group: 10
+    org_user: 9
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 10
+  fields:
+    org_user_group: 8
+    org_user: 10
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 11
+  fields:
+    org_user_group: 13
+    org_user: 11
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 12
+  fields:
+    org_user_group: 13
+    org_user: 12
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 13
+  fields:
+    org_user_group: 1
+    org_user: 13
+    level: 10
+- model: org.orguserinorgusergroup
+  pk: 14
+  fields:
+    org_user_group: 9
+    org_user: 7
+    level: 10

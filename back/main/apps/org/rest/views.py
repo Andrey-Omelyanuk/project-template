@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from apps.core.rest.views import CoreModelViewSet, CoreReadOnlyModelViewSet
+from django.db.models import Q
 from ..models import *
 from ..actions import user_create_org
 from .serializers import * 
@@ -61,7 +62,25 @@ class OrgUserHistoryListView(CoreReadOnlyModelViewSet):
 class OrgUserGroupViewSet(CoreModelViewSet):
     serializer_class = OrgUserGroupSerializer
     def get_queryset(self):
-        return OrgUserGroup.objects.all()
+        if self.request.user.is_staff:
+            return OrgUserGroup.objects.all()
+        else:
+            groups = OrgUserGroup.objects.filter(
+                org_users_in_org_user_group__org_user__user=self.request.user)
+            descendants_q = Q()
+            ancestors_q = Q()
+
+            for group in groups:
+                descendants = group.get_descendants(include_self=True)
+                ancestors = group.get_ancestors(include_self=True)
+                descendants_q |= Q(pk__in=descendants.values_list('pk', flat=True))
+                ancestors_q |= Q(pk__in=ancestors.values_list('pk', flat=True))
+
+            queryset = OrgUserGroup.objects.filter(descendants_q | ancestors_q)
+            # from ...core.utils import print_sql
+            # print_sql(queryset)
+            return queryset
+
 
 class OrgUserGroupHistoryListView(CoreReadOnlyModelViewSet):
     serializer_class = OrgUserGroupHistorySerializer

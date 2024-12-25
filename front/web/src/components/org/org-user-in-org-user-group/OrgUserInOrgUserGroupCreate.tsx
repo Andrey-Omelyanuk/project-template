@@ -1,7 +1,7 @@
 import { Button, ControlGroup } from '@blueprintjs/core'
 import { ArrayStringInput, EQ, ObjectInput, QueryPage } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
-import { Org, OrgUser, OrgUserInOrgUserGroup } from '@/models/org'
+import { Org, OrgUser, OrgUserGroup, OrgUserInOrgUserGroup } from '@/models/org'
 import { ModelForm } from '@/utils/form'
 import { useModelForm, useObjectInput, useQueryPage } from '@/utils'
 import { ObjectSelect } from '@/components/core/inputs'
@@ -9,13 +9,14 @@ import { ObjectSelect } from '@/components/core/inputs'
 
 export interface OrgUserInOrgUserGroupCreateProps {
     orgInput: ObjectInput<Org>
+    groupInput: ObjectInput<OrgUserGroup>
     onCreated?: (obj: OrgUserInOrgUserGroup) => void
 }
 
 const OrgUserInOrgUserGroupCreate = observer((props: OrgUserInOrgUserGroupCreateProps) => {
-    const { onCreated } = props
+    const { orgInput, groupInput, onCreated } = props
     const [orgUsers, ] = useQueryPage(OrgUser, {
-        filter: EQ('org_id', props.orgInput),
+        filter: EQ('org_id', orgInput),
         relations: ArrayStringInput({value: ['user', ]}),
         autoupdate: true,
     }) as [QueryPage<OrgUser>, Promise<void>]
@@ -26,6 +27,7 @@ const OrgUserInOrgUserGroupCreate = observer((props: OrgUserInOrgUserGroupCreate
     const form = useModelForm(() => {
         const form = new ModelForm<OrgUserInOrgUserGroup>()
         const obj = new OrgUserInOrgUserGroup()
+        form.inputs['org_user_group_id'] = groupInput
         form.inputs['org_user_id'] = orgUserInput
         form.setObj(obj)
         return form

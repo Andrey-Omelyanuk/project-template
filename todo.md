@@ -6,12 +6,18 @@
 - show setting on the web page
 - show users   on the web page
 - events calendar
-- org - permissions 
-- notifications
 - user profile
     - set avatar
     - change other things
 - UI: current org-user
-- UI: tasks in org 
-    - run celery task & show progress and final result
 - UI: move ModelFrom into MobX-ORM
+
+- Org
+    - Notifications
+        - you has added to group
+        - you has removed from group
+
+- LongTask
+    - run task in org-group
+    - update progress using pub-sub service
+    - permission

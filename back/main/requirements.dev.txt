@@ -7,3 +7,5 @@ pytest-cov              == 4.0.0    # This plugin produces coverage reports.
 pytest-xdist[psutil]    == 3.2.0    # Run test in parallel.
 pylint                  == 2.15.7   # A static code analyser for Python.
 pylint-django           == 2.5.3    # A Pylint plugin for improving code analysis when analysing code using Django.
+pygments                == 2.18.0   # Pygments is a syntax highlighting package written in Python.
+sqlparse                == 0.5.3    # A non-validating SQL parser module for Python.

@@ -54,7 +54,11 @@ const OrgsPage = observer(() => {
             <OrgList orgInput={orgInput}/>
             <OrgUserGroupTree groupInput={groupInput}/>
             <div className='m-4'>
-                <OrgUserInOrgUserGroupCreate orgInput={orgInput} onCreated={() => groupUsers.shadowLoad()}/>
+                <OrgUserInOrgUserGroupCreate
+                    orgInput={orgInput}
+                    groupInput={groupInput}
+                    onCreated={() => groupUsers.shadowLoad()}
+                />
             </div>
             <OrgUserInOrgUserGroupList input={userInput}/>
         </Page>
