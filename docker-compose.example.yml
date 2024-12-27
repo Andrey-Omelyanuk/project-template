@@ -1,8 +1,41 @@
+x-back-main:
+  &back-main
+  user: "${UID}:${GID}"
+  build: { context: ./back/main, target: dev-nvim }
+  stdin_open: true  # docker run -i
+  tty       : true  # docker run -t
+  volumes:
+    - ./back/main/:/home/app/code
+    # for cache nvim plugins
+    - local-cache:/home/app/.local
+  depends_on:
+    - db
+    - redis
+  environment:
+    DEBUG       : True
+    DEBUG_TOOLBAR : True
+    SCHEMA      : http
+    DOMAIN      : ${DOMAIN}
+    SECRET_KEY  : ${SECRET_KEY}
+    DB_HOST     : db
+    DB_PORT     : 5432
+    DB_NAME     : ${DB_MAIN}
+    DB_USER     : ${DB_USER}
+    DB_PASSWORD : ${DB_PASSWORD}
+    S3_ENDPOINT_URL     : ${S3_ENDPOINT_URL}
+    S3_BUCKET_NAME      : ${S3_BUCKET_NAME}
+    S3_ACCESS_KEY_ID    : ${S3_ACCESS_KEY_ID}
+    S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
+    CELERY_BROKER_URL   : redis://redis:6379/0
+    CENTRIFUGO_TOKEN_SECRET     : ${PUB_SUB_TOKEN_SECRET}
+    CENTRIFUGO_HTTP_API_ENDPOINT: ${PUB_SUB_HTTP_API_ENDPOINT}
+    CENTRIFUGO_HTTP_API_KEY     : ${PUB_SUB_HTTP_API_KEY}
 
 volumes:
   redis:
   minio:
   db:
+  local-cache:
 
 services:
   # ----------------------------------------------
@@ -10,12 +43,13 @@ services:
     image: postgres:14.6-alpine3.16
     volumes:
       - db:/var/lib/postgresql/data
-      - ./db/multiple-databases.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
+      # script to create multiple databases
+      - ./utils/multiple-databases.sh:/docker-entrypoint-initdb.d/multiple-databases.sh
     ports:
       - 5432:5432 # expose it for dev tools
     environment:
       # Note: the dbs are created when the container is created, not when the container is started
-      POSTGRES_MULTIPLE_DATABASES : ${AUTH_DB}
+      POSTGRES_MULTIPLE_DATABASES : ${DB_MAIN}
       POSTGRES_USER               : ${DB_USER}
       POSTGRES_PASSWORD           : ${DB_PASSWORD}
     healthcheck:
@@ -26,6 +60,8 @@ services:
   # ----------------------------------------------
   redis:
     image: redis:6.2.6-alpine3.15
+    ports:
+      - 6379:6379 # expose it for dev tools
     volumes: 
       - redis:/data
   # ----------------------------------------------
@@ -38,101 +74,25 @@ services:
       MINIO_ROOT_USER       : ${S3_ADMIN} 
       MINIO_ROOT_PASSWORD   : ${S3_PASSWORD} 
   # ----------------------------------------------
-
-  # auth:
-
-
-  # front:
-  #   build: 
-  #     context: ./front  # where we should find dockerfile
-  #     target : dev
-  #   volumes:
-  #     - ./front:/app
-  #   ports:
-  #     - 3000:3000
-  #   stdin_open: true # docker run -i
-  #   tty: true        # docker run -t
-  #   entrypoint: ["sh", "-c", "yarn install && yarn start"]
-  #   environment:
-  #     - CHOKIDAR_USEPOLLING=true
-
-  # api:
-  #   image: nginx:1.12-alpine
-  #   volumes:
-  #     - ./docker-compose.nginx.conf:/etc/nginx/nginx.conf:ro
-  #   depends_on:
-  #     - front
-  #     - back 
-  #   ports:
-  #     - "8050:8050"
-
-  # # async:
-  # #   image: centrifugo/centrifugo:v2.8
-
-  # back:
-  #   build:
-  #     context: ./back
-  #     target: dev
-  #   depends_on:
-  #     - db 
-  #     - worker
-  #   volumes:
-  #     - ./back:/app
-  #   ports:
-  #     - 8000:8000
-  #   entrypoint: [
-  #     "sh", "-c", 
-  #     "pip install -r requirements.txt && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-  #     ]
-  
-  # worker:
-  #   build: 
-  #     context : ./back
-  #     target  : dev 
-  #   depends_on: 
-  #     - db
-  #     - rabbitmq
-  #   volumes:
-  #     - ./back:/app
-  #   command: sh -c "pip install -r requirements.txt && celery -A main worker -l info"
-   
-  # # beat:
-  # #   build:
-  # #     context: ./back
-  # #     target: dev
-  # #   depends_on:
-  # #     - db 
-  # #   volumes:
-  # #     - ./back:/app
-  # #   ports:
-  # #     - 8001:8001
-  # #   entrypoint: [ "sh", "-c", "pip install -r requirements.txt && celery worker -A main -l info --concurrency=2" ]
-
-  # flower:  
-  #   command: sh -c "pip install -r requirements.txt && celery -A main flower --port=8888"
-  #   depends_on: 
-  #     - rabbitmq
-  #   build: 
-  #     context : ./back
-  #     target  : dev 
-  #   ports:  
-  #     - 8888:8888 
-  #   volumes:
-  #     - ./back:/app
-
-  # db:
-  #   image: postgres:12.0-alpine
-  #   environment:
-  #     - POSTGRES_USER=project-template
-  #     - POSTGRES_PASSWORD=123456
-  #     - POSTGRES_DB=project-template
-
-  # rabbitmq:
-  #   image: rabbitmq:3.8-alpine
-  #   environment:
-  #     - RABBITMQ_DEFAULT_USER=andrey
-  #     - RABBITMQ_DEFAULT_PASS=123456
-  #     - RABBITMQ_DEFAULT_VHOST=main
+  pub-sub:
+    image: centrifugo/centrifugo:v5.2.1
+    volumes:
+      - ./utils/centrifugo.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+  # ----------------------------------------------
+  back-main:
+    <<: *back-main
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+  back-main-worker:
+    <<: *back-main
+    command: celery -A main worker -l info
+  back-main-beat:
+    <<: *back-main
+    command: celery -A main beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+  # Note: on production use flower from other image
+  back-main-flower:
+    <<: *back-main
+    command: celery -A main flower --port=8888
   # ----------------------------------------------
   nginx:
     image: nginx:1.25
@@ -140,12 +100,36 @@ services:
       # nginx.conf.template will be processed by envsubst 
       # to replace the variables from the environment
       # the result will be saved in /etc/nginx/nginx.conf 
-      - ./proxy/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+      - ./utils/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     ports:
       - 80:80
     depends_on:
       - s3
+      - back-main
+      - pub-sub
     environment:
       NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
-      DOMAIN_S3     : ${S3_DOMAIN}
+      DOMAIN: ${DOMAIN}
+  # ----------------------------------------------
+  # service-a:
+  #   build: { context: ./service-a, target: dev }
+  #   stdin_open: true  # docker run -i
+  #   tty       : true  # docker run -t
+  #   volumes:
+  #   - ./service-a:/app
+  #   command: sh -c "fastapi dev main.py --host 0.0.0.0"
+  #   ports:
+  #     - 8000:8000
+  # ----------------------------------------------
+  web:
+    build: { context: ./front/web, target : dev-nvim }
+    user: "${UID}:${GID}"
+    volumes:
+      - ./front/web:/home/node/code
+      - local-cache:/home/node/.local
+    stdin_open: true # docker run -i
+    tty       : true # docker run -t
+    command: sh -c "yarn install && yarn dev"
+    # fix linting issues
+    # command: sh -c "yarn next lint -- --fix"
   # ----------------------------------------------

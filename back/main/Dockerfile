@@ -1,18 +1,19 @@
+# ------------------------------------------------------------------------------
 FROM python:3.12.4-alpine3.20 AS base
+
 ARG RELEASE_VERSION
 ENV RELEASE_VERSION=$RELEASE_VERSION
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-# fix PYTHONPATH otherwise DJANGO_SETTINGS_MODULE cannot work correctly
-ENV PYTHONPATH=/app
 
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk update && apk upgrade && \
-    apk add --no-cache \
     # base dependencies
-    curl gcc
+    apk add curl gcc
 
-WORKDIR /app
+# Create a group and user for the app
+RUN addgroup -g 1000 -S app && adduser -u 1000 -S app -G app 
+
+# app dependencies
+WORKDIR /home/app/code
 COPY ./requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip && \
@@ -20,22 +21,38 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # ------------------------------------------------------------------------------
 FROM base AS dev
-# set XDG_CACHE_HOME otherwise pylint trying to create cache in the / (root) but it have no access to do it
-ENV XDG_CACHE_HOME=/app/.cache
-# we need it to init pylint_django plugin
-ENV DJANGO_SETTINGS_MODULE=main.settings
 
 RUN --mount=type=cache,target=/root/.cache/apk \
-    apk add --no-cache musl-dev python3-dev linux-headers
+    apk add musl-dev python3-dev linux-headers git
 
 COPY ./requirements.dev.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.dev.txt
 
-# use default ubuntu user 
-USER 1000
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+# set XDG_CACHE_HOME otherwise pylint trying to create
+# cache in the / (root) but it have no access to do it
+# ENV XDG_CACHE_HOME=/home/app/.cache
+# fix PYTHONPATH otherwise DJANGO_SETTINGS_MODULE cannot work correctly
+# ENV PYTHONPATH=/home/app/code
+# we need it to init pylint_django plugin
+# ENV DJANGO_SETTINGS_MODULE=main.settings
+
+# ------------------------------------------------------------------------------
+FROM dev AS dev-nvim 
+
+RUN --mount=type=cache,target=/root/.cache/apk \
+    apk add nodejs npm neovim ripgrep build-base wget --update
+
+USER app
+RUN git clone https://github.com/NvChad/starter ~/.config/nvim
+RUN mkdir /home/app/.local 
+VOLUME /home/app/.local
+
 
 # ------------------------------------------------------------------------------
 FROM base AS prod
 RUN pip install -Iv gunicorn==20.1.0
 COPY . .
+

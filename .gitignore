@@ -1,6 +1,7 @@
 .idea
 .ropeproject
 *.swp
+.nvimlog
 
 .env
 docker-compose.yml

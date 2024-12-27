@@ -17,18 +17,19 @@ http {
     proxy_set_header    X-Forwarded-Proto $scheme;
     proxy_set_header    X-Forwarded-Host $server_name;
 
-    server {
-        listen 80;
-        server_name ${S3_DOMAIN};
+    server { listen 80; server_name       s3.${DOMAIN}; location / { proxy_pass http://s3:9000; } }
+    server { listen 80; server_name admin.s3.${DOMAIN}; location / { proxy_pass http://s3:9001; } }
+    server { listen 80; server_name     main.${DOMAIN}; location / { proxy_pass http://back-main:8000; } }
+    server { listen 80; server_name   flower.${DOMAIN}; location / { proxy_pass http://back-main-flower:8888; } }
+    server { listen 80; server_name  pub-sub.${DOMAIN}; location / { proxy_pass http://pub-sub:8000; } }
+    server { listen 80; server_name          ${DOMAIN}; 
         location / {
-            proxy_pass http://s3:9000;
-        }
-    }
-    server {
-        listen 80;
-        server_name admin.${S3_DOMAIN};
-        location / {
-            proxy_pass http://s3:9001;
+            # it is host IP, it looks like a docker constant, I don't know when it can be changed
+            # use it only for local development
+            # proxy_pass http://172.17.0.1:3000;
+            # this works only on Mac OS with local back-end (i.e. Docker resolver)
+            # proxy_pass http://host.docker.internal:3000;
+            proxy_pass http://web:5173;
         }
     }
 }

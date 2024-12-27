@@ -13,7 +13,7 @@ help:
 	@echo "stop     - Stop and remove all containers and networks"
 	@echo "reset    - Stop and remove all containers, networks and volumes"
 	@echo "log s=<name> - Show logs for <name> container"
-	@echo "sh  s=<name> - Enter to <name> container"
+	@echo "sh  s=<name> u=<user> - Go into <name> container as <user>" 
 
 	@echo test_data_dump
 	@echo test_data_reset
@@ -23,22 +23,27 @@ help:
 
 
 init:
-	if [ ! -f "./.env" ]; 					then cp ./.env.example ./.env; fi
-	if [ ! -f "./$(DOCKER_COMPOSE_FILE)" ]; then cp ./docker-compose.example.yml ./$(DOCKER_COMPOSE_FILE); fi
-	if [ ! -f "./utils/nginx.conf" ]; 		then cp ./utils/nginx.conf.example ./proxy/nginx.conf;  fi
+	if [ ! -f "./.env" ];
+		then cp  ./.env.example ./.env; fi
+	if [ ! -f "./$(DOCKER_COMPOSE_FILE)" ];
+		then cp  ./docker-compose.example.yml ./$(DOCKER_COMPOSE_FILE); fi
+	if [ ! -f "./utils/nginx.conf" ];
+		then cp  ./utils/nginx.conf.example ./proxy/nginx.conf;  fi
 build:
 	export DOCKER_BUILDKIT=1 && \
-	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build --parallel
 run:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) up
 stop:
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) stop 
+down:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down
 reset:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) down -v
 log:
-	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) logs $(s)	
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) logs -f $(s)	
 sh:
-	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec $(s) sh	
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec -u $(u) $(s) sh
 
 
 test_data_dump:
