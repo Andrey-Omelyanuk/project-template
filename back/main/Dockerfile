@@ -39,16 +39,19 @@ ENV PYTHONUNBUFFERED 1
 # we need it to init pylint_django plugin
 # ENV DJANGO_SETTINGS_MODULE=main.settings
 
+
 # ------------------------------------------------------------------------------
 FROM dev AS dev-nvim 
+ARG HOST_HOME
 
 RUN --mount=type=cache,target=/root/.cache/apk \
-    apk add nodejs npm neovim ripgrep build-base wget --update
+    apk add nodejs npm neovim neovim-doc ripgrep build-base wget --update
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install black ruff mypy debugpy
 
 USER app
-RUN git clone https://github.com/NvChad/starter ~/.config/nvim
-RUN mkdir /home/app/.local 
-VOLUME /home/app/.local
+COPY --chown=app:app ./tmp/nvim /home/app/.config/nvim
 
 
 # ------------------------------------------------------------------------------

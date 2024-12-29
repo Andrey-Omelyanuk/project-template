@@ -7,7 +7,7 @@ x-back-main:
   volumes:
     - ./back/main/:/home/app/code
     # for cache nvim plugins
-    - local-cache:/home/app/.local
+    # - local-cache:/home/app/.local
   depends_on:
     - db
     - redis
@@ -122,11 +122,11 @@ services:
   #     - 8000:8000
   # ----------------------------------------------
   web:
-    build: { context: ./front/web, target : dev-nvim }
+    build: { context: ./front/web, target : dev }
     user: "${UID}:${GID}"
     volumes:
       - ./front/web:/home/node/code
-      - local-cache:/home/node/.local
+      # - local-cache:/home/node/.local
     stdin_open: true # docker run -i
     tty       : true # docker run -t
     command: sh -c "yarn install && yarn dev"

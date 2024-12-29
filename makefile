@@ -24,14 +24,20 @@ help:
 
 init:
 	if [ ! -f "./.env" ];
-		then cp  ./.env.example ./.env; fi
+		then cp  ./utils/.env.example ./.env; fi
 	if [ ! -f "./$(DOCKER_COMPOSE_FILE)" ];
-		then cp  ./docker-compose.example.yml ./$(DOCKER_COMPOSE_FILE); fi
+		then cp  ./utils/docker-compose.example.yml ./$(DOCKER_COMPOSE_FILE); fi
 	if [ ! -f "./utils/nginx.conf" ];
 		then cp  ./utils/nginx.conf.example ./proxy/nginx.conf;  fi
 build:
+	mkdir -p ./back/main/tmp 
+	mkdir -p ./front/web/tmp 
+	cp -R ~/.config/nvim ./back/main/tmp 
+	cp -R ~/.config/nvim ./front/web/tmp 
 	export DOCKER_BUILDKIT=1 && \
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build --parallel
+	rm -R ./back/main/tmp
+	rm -R ./front/web/tmp
 run:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) up
 stop:
@@ -56,4 +62,3 @@ makemigrations-empty:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec back-main python manage.py makemigrations source --name new_empty --empty
 migrate:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) exec back-main python manage.py migrate 
-

@@ -53,7 +53,7 @@ class OrgUserGroup(MPTTModel):
     """ Hierarchical groups in Organization """ 
     org     = ForeignKey    (Org   , on_delete=CASCADE, null=False, blank=True, related_name='org_user_groups')
     parent  = TreeForeignKey('self', on_delete=CASCADE, null=True , blank=True, related_name='children')
-    name    = CharField(max_length=32)
+    name    = CharField     (max_length=32)
 
     class Meta:
         unique_together = (('parent', 'name'), )

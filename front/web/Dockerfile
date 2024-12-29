@@ -29,12 +29,10 @@ FROM dev AS dev-nvim
 
 USER root 
 RUN --mount=type=cache,target=/root/.cache/apk \
-    apk add neovim ripgrep build-base wget
+    apk add nodejs npm neovim neovim-doc ripgrep build-base wget --update
 
 USER node 
-RUN git clone https://github.com/NvChad/starter ~/.config/nvim
-RUN mkdir /home/node/.local 
-VOLUME /home/node/.local
+COPY --chown=app:app ./tmp/nvim /home/app/.config/nvim
 
 
 # -----------------------------------------------------------------------------

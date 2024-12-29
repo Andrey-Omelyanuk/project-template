@@ -9,7 +9,7 @@
 #tmux split-window -h                  'sleep 30s; docker-compose logs -f front; bash -i'
 
 PROJECT_NAME=project-template
-START_DELAY=20s
+START_DELAY=10s
 tmux new-session  -s ${PROJECT_NAME}   -n main    -d "make run"
 tmux new-window   -t ${PROJECT_NAME}:1 -n web        "sleep ${START_DELAY}; make sh s=web u=node"
 tmux new-window   -t ${PROJECT_NAME}:2 -n web-log    "sleep ${START_DELAY}; make log s=web"
@@ -20,3 +20,7 @@ tmux new-window   -t ${PROJECT_NAME}:5 -n worker-log "sleep ${START_DELAY}; dock
 tmux select-window -t ${PROJECT_NAME}:0
 # attach to the session
 tmux -2 attach-session -t ${PROJECT_NAME}
+
+# nvim key bindings from https://www.youtube.com/watch?v=4BnVeOUeZxc
+# -----------------------------
+# choose color style: space t h 
