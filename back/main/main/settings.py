@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     # internal apps
     'apps.core',
     'apps.org',
+    'apps.test',
 ]
 
 

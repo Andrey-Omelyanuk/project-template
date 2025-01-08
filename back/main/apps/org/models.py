@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Model, CASCADE, ForeignKey, CharField, BooleanField, PositiveSmallIntegerField
-from django.db.models import IntegerChoices
+from django.db.models import IntegerChoices, QuerySet
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 from simple_history import register as register_history
@@ -60,6 +61,22 @@ class OrgUserGroup(MPTTModel):
 
     def __str__(self):
         return f"{self.org} :: {self.parent.name if self.parent else 'ROOT'} :: {self.name}"
+
+    @staticmethod
+    def get_viewable_groups(cls, user) -> 'QuerySet[OrgUserGroup]':
+        """ Get groups that user can view """
+
+        groups = OrgUserGroup.objects.filter(
+            org_users_in_org_user_group__org_user__user=user)
+        descendants_q = Q()
+        ancestors_q = Q()
+        for group in groups:
+            descendants = group.get_descendants(include_self=True)
+            ancestors = group.get_ancestors(include_self=True)
+            descendants_q |= Q(pk__in=descendants.values_list('pk', flat=True))
+            ancestors_q |= Q(pk__in=ancestors.values_list('pk', flat=True))
+
+        return OrgUserGroup.objects.filter(descendants_q | ancestors_q)
 
 # MPTTModel has conflict with HistoricalRecords, so we need to register it manually
 register_history(OrgUserGroup)

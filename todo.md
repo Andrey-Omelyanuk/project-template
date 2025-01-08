@@ -29,8 +29,6 @@
 
 - User Personal Notifications
 
-
-
 - PubSub Notifications
     - user
     - org-user
@@ -41,5 +39,3 @@
         - the problem show to understand what group we have access
             - if chenges come from any org-user-group we have to update all groups
                 and resubscribe
-
-
