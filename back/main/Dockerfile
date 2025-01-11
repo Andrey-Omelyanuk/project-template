@@ -7,7 +7,12 @@ ENV RELEASE_VERSION=$RELEASE_VERSION
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk update && apk upgrade && \
     # base dependencies
-    apk add curl gcc
+    apk add curl gcc \
+    # video dependencies 
+    # TODO: move it to separate image of video-worker
+    ffmpeg && \
+    # clean up
+    rm -rf /var/cache/apk/*
 
 # Create a group and user for the app
 RUN addgroup -g 1000 -S app && adduser -u 1000 -S app -G app 
@@ -46,12 +51,10 @@ ARG HOST_HOME
 
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk add nodejs npm neovim neovim-doc ripgrep build-base wget --update
-
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install black ruff mypy debugpy
 
 USER app
-COPY --chown=app:app ./tmp/nvim /home/app/.config/nvim
 
 
 # ------------------------------------------------------------------------------

@@ -3,8 +3,17 @@ from django.db.models import CASCADE, BooleanField, CharField, DateTimeField, \
     ForeignKey, IntegerChoices, Model, PositiveSmallIntegerField, TextField
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
-
 User = get_user_model()
+
+
+__all__ = [
+    'Course',
+    'CourseUser',
+    'CourseChapter',
+    'Lesson',
+    'LessonBlock',
+    'LessonUserStatus',
+]
 
 
 class Course(Model):
@@ -43,7 +52,7 @@ class CourseChapter(Model):
     index   = PositiveSmallIntegerField()
     title   = CharField(max_length=512)
     desc    = TextField()
-    # TODO: img
+    # img
 
     history = HistoricalRecords()
 
@@ -59,7 +68,7 @@ class Lesson(Model):
     index       = PositiveSmallIntegerField()
     title       = CharField(max_length=512)
     desc        = TextField()
-    # TODO: img
+    # img
 
     history = HistoricalRecords()
 
@@ -71,8 +80,10 @@ class Lesson(Model):
 
 
 class LessonBlock(Model):
+    """ Block of lesson. Can be text, image, audio or video. """
 
     class Type(IntegerChoices):
+        """ Block type. """
         TEXT = 1, _('Text')
         IMAGE= 2, _('Image')
         AUDIO= 3, _('Audio')
@@ -83,7 +94,7 @@ class LessonBlock(Model):
     type        = PositiveSmallIntegerField(choices=Type.choices, default=Type.TEXT)
     title       = CharField(max_length=512, null=True, blank=True)
     text        = TextField(null=True, blank=True)
-    # TODO: file
+    # file
 
     history = HistoricalRecords()
 
@@ -105,4 +116,3 @@ class LessonUserStatus(Model):
 
     class Meta:
         unique_together = (('lesson', 'user'), )
-

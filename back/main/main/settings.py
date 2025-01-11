@@ -70,8 +70,10 @@ INSTALLED_APPS = [
     # 'allath.socialaccount.providers.openid_connect',
     # internal apps
     'apps.core',
+    'apps.files',
     'apps.org',
     'apps.test',
+    'apps.course',
 ]
 
 
@@ -144,8 +146,20 @@ DATABASES = {
 STATIC_URL = '/back-static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # collectstatic will put files here
 STORAGES = {
-    "default"       : { "BACKEND": "storages.backends.s3.S3Storage" },
-    "staticfiles"   : { "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage" },
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "endpoint_url"  : S3_ENDPOINT_URL,
+            "access_key"    : S3_ACCESS_KEY_ID, 
+            "secret_key"    : S3_SECRET_ACCESS_KEY, 
+            "bucket_name"   : S3_BUCKET_NAME, 
+            "custom_domain" : S3_PUBLIC_DOMAIN,
+            "url_protocol"  : S3_PUBLIC_SCHEMA,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+    },
 }
 
 # DEBUG

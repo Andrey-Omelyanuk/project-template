@@ -17,3 +17,5 @@ def task_success_handler(sender=None, result=None, **kwargs):
         'id': task_id,
         'status': result.status,
     })
+
+

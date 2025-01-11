@@ -5,11 +5,15 @@ from django.http import JsonResponse
 from django.urls import path, include
 from rest_framework import routers
 from apps.core.rest.router import core
+from apps.files.rest.router import files
 from apps.org.rest.router import org
+from apps.course.rest.router import course
 
 router = routers.DefaultRouter(trailing_slash=True)
-core (router)
-org  (router)
+core(router)
+org(router)
+files(router)
+course(router)
 
 urlpatterns = [
     path('__debug__/'           , include('debug_toolbar.urls')),

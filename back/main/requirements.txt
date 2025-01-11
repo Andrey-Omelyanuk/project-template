@@ -20,5 +20,6 @@ django-cors-headers             == 4.6.0    # for handling the server headers re
 django-extensions               == 3.2.3    # Django Extensions is a collection of custom extensions for the Django Framework.
 django-mptt                     == 0.16.0   # MPTT is a technique for storing hierarchical data in a database. The aim is to make retrieval operations very efficient.
 django-simple-history           == 3.7.0    # Store model history and view/revert changes from admin site.
+django-storages                 == 1.14.4   # Django Storages is a collection of custom storage backends for Django. 
 drf-flex-fields                 == 1.0.2    # Flexible, dynamic fields and nested resources for Django REST Framework serializers.
 # -------------------------------------------------------------------------------------------------

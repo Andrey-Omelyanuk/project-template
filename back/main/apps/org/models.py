@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 from simple_history import register as register_history
 from mptt.models import MPTTModel, TreeForeignKey
-
 User = get_user_model()
+
 
 __all__ = [
     'AccessLevel',
@@ -17,11 +17,17 @@ __all__ = [
     'OrgUserInOrgUserGroup',
 ]
 
+
 class AccessLevel(IntegerChoices):
     ADMIN  = 30, _('Admin')
     EDITOR = 20, _('Read/Write')
     VIEWER = 10, _('Read Only')
     NONE   =  0, _('None')
+    # guest
+    # member
+    # manager
+    # admin
+    # owner
 
 
 class Org(Model):

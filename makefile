@@ -30,14 +30,8 @@ init:
 	if [ ! -f "./utils/nginx.conf" ];
 		then cp  ./utils/nginx.conf.example ./proxy/nginx.conf;  fi
 build:
-	mkdir -p ./back/main/tmp 
-	mkdir -p ./front/web/tmp 
-	cp -R ~/.config/nvim ./back/main/tmp 
-	cp -R ~/.config/nvim ./front/web/tmp 
 	export DOCKER_BUILDKIT=1 && \
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build --parallel
-	rm -R ./back/main/tmp
-	rm -R ./front/web/tmp
 run:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) up
 stop:
