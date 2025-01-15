@@ -102,7 +102,7 @@ class LessonBlock(Model):
         unique_together = (('lesson', 'index'), )
 
     def __str__(self):
-        return f"{self.id} {self.title}"
+        return f"{self.lesson} = {self.id} {self.title}"
 
 
 class LessonUserStatus(Model):

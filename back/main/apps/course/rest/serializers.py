@@ -18,10 +18,10 @@ __all__ = [
 class CourseSerializer(CoreModelSerializer):
     class Meta:
         model = Course
-        include = '__all__'
+        fields = '__all__'
         expandable_fields = {
-            'chapters': ('apps.core.rest.CourseChapterSerializer', {'many': True}),
-            'users'   : ('apps.core.rest.CourseUserSerializer', {'many': True}),
+            'chapters': ('apps.course.rest.CourseChapterSerializer', {'many': True}),
+            'users'   : ('apps.course.rest.CourseUserSerializer', {'many': True}),
         }
 
 
@@ -39,8 +39,8 @@ class CourseUserSerializer(CoreModelSerializer):
 class CourseChapterSerializer(CoreModelSerializer):
     course_id   = PrimaryKeyRelatedField(source='course', queryset=Course.objects.all())
     class Meta:
-        model = CourseUser
-        exclude = ('course', ) 
+        model = CourseChapter
+        exclude = ('course', )
         expandable_fields = {
             'course' :  'apps.course.rest.CourseSerializer',
             'lessons': ('apps.course.rest.LessonSerializer', {'many': True}),
@@ -61,7 +61,7 @@ class LessonSerializer(CoreModelSerializer):
 class LessonBlockSerializer(CoreModelSerializer):
     lesson_id  = PrimaryKeyRelatedField(source='lesson', queryset=Lesson.objects.all())
     class Meta:
-        model = Lesson 
+        model = LessonBlock
         exclude = ('lesson', ) 
 
 
@@ -69,6 +69,6 @@ class LessonUserStatusSerializer(CoreModelSerializer):
     lesson_id = PrimaryKeyRelatedField(source='lesson', queryset=Lesson.objects.all())
     user_id   = PrimaryKeyRelatedField(source='user'  , queryset=User.objects.all())
     class Meta:
-        model = Lesson 
+        model = LessonUserStatus
         exclude = ('lesson', 'user', ) 
 

@@ -7,7 +7,7 @@ ENV RELEASE_VERSION=$RELEASE_VERSION
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk update && apk upgrade && \
     # base dependencies
-    apk add curl gcc \
+    apk add --no-cache curl gcc \
     # video dependencies 
     # TODO: move it to separate image of video-worker
     ffmpeg && \
@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 FROM base AS dev
 
 RUN --mount=type=cache,target=/root/.cache/apk \
-    apk add musl-dev python3-dev linux-headers git
+    apk add --no-cache musl-dev python3-dev linux-headers git
 
 COPY ./requirements.dev.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -50,7 +50,7 @@ FROM dev AS dev-nvim
 ARG HOST_HOME
 
 RUN --mount=type=cache,target=/root/.cache/apk \
-    apk add nodejs npm neovim neovim-doc ripgrep build-base wget --update
+    apk add --no-cache nodejs npm neovim neovim-doc ripgrep build-base wget --update
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install black ruff mypy debugpy
 
@@ -58,7 +58,7 @@ USER app
 
 
 # ------------------------------------------------------------------------------
-FROM base AS prod
-RUN pip install -Iv gunicorn==20.1.0
-COPY . .
+# FROM base AS prod
+# RUN pip install -Iv gunicorn==20.1.0
+# COPY . .
 

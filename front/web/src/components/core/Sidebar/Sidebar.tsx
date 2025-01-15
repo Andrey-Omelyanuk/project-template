@@ -10,9 +10,10 @@ const menu : TreeNodeInfo[] = [
     { id: '/'       , label: 'Dashboard'        , icon: IconNames.DASHBOARD },
     { id: '/users'  , label: 'Users'            , icon: IconNames.USER},
     { id: '/orgs'   , label: 'Organizations'    , icon: IconNames.GROUP_ITEM},
+    { id: '/courses', label: 'Courses'          , icon: IconNames.COLUMN_LAYOUT},
 ] 
 
-type NodePath = number[];
+type NodePath = number[]
 
 export interface LeftSidebarProps {
     className?: string

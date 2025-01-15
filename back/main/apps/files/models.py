@@ -31,13 +31,13 @@ class File(Model):
     def __str__(self):
         return f"{self.id} {self.file}"
 
-@receiver(post_save, sender=File)
-def process_video(sender, instance, **kwargs):
-    """ When file is uploaded, process it. """
-    from .tasks.video import process_video_task
-    if instance.type == File.Type.VIDEO:
-        # process_video_task.delay(instance.id, '720p')
-        process_video_task.delay(instance.id, '1080p')
+# @receiver(post_save, sender=File)
+# def process_video(sender, instance, **kwargs):
+#     """ When file is uploaded, process it. """
+#     from .tasks.video import process_video_task
+#     if instance.type == File.Type.VIDEO:
+#         # process_video_task.delay(instance.id, '720p')
+#         process_video_task.delay(instance.id, '1080p')
 
 
 class FileVersion(Model):

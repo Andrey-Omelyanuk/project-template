@@ -17,6 +17,8 @@ import Welcome from './components/core/Welcome.tsx'
 const BaseLayout        = lazy(() => import('./pages/app/layout.tsx'))
 const DashboardPage     = lazy(() => import('./pages/app/dashboard.tsx'))
 const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
+const CoursesPage       = lazy(() => import('./pages/app/courses.tsx'))
+const CoursePage        = lazy(() => import('./pages/app/course.tsx'))
 const UsersPage         = lazy(() => import('./pages/app/users.tsx'))
 const UserProfilePage   = lazy(() => import('./pages/app/user-profile.tsx'))
 const root = document.getElementById('root')
@@ -49,6 +51,8 @@ ReactDOM.createRoot(root).render(
                     <Route path='users'    element={<UsersPage/>}/>
                     <Route path='orgs'     element={<OrgsPage/>}/>
                     <Route path='org/:org' element={<OrgPage/>}/>
+                    <Route path='courses'  element={<CoursesPage/>}/>
+                    <Route path='courses/:course' element={<CoursePage/>}/>
                     <Route path='profile'  element={<UserProfilePage/>}/>
                 </Route>
             </Route>
