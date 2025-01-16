@@ -1,7 +1,8 @@
 /* eslint react-hooks/exhaustive-deps: 0 */ 
-import { useMemo, useEffect } from 'react'
-import { Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs, ObjectForm, Input } from 'mobx-orm'
+import { useMemo, useEffect, useState } from 'react'
+import { Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs, ObjectForm, Input, Query, QueryPage, QueryRaw, QueryRawPage, QueryCacheSync } from 'mobx-orm'
 import { ModelForm } from './form'
+import { wait } from '@testing-library/user-event/dist/cjs/utils/index.js'
 
 /**
  *  Hooks for uging mobx-orm inputs and queries
@@ -9,28 +10,33 @@ import { ModelForm } from './form'
 
 
 enum QueryType {
-    QUERY           = 'getQuery',
-    QUERY_PAGE      = 'getQueryPage',
-    QUERY_RAW       = 'getQueryRaw',
-    QUERY_RAW_PAGE  = 'getQueryRawPage'
+    QUERY               = 'getQuery',
+    QUERY_PAGE          = 'getQueryPage',
+    QUERY_RAW           = 'getQueryRaw',
+    QUERY_RAW_PAGE      = 'getQueryRawPage',
+    QUERY_CACHE_SYNC    = 'getQueryCacheSync',
 }
-const makeQuery = <M extends typeof Model>(model: M, queryType: QueryType, options?: QueryProps<InstanceType<M>>) => {
-    const query = useMemo(() => model[queryType](options), [])
-    const ready = useMemo(() => query.ready(), [])  // invoke at FIRST time query loaded
+const makeQuery = <M extends typeof Model, Q extends Query<InstanceType<M>>>(model: M, queryType: QueryType, options?: QueryProps<InstanceType<M>>)
+    :[Query<InstanceType<M>>, Promise<Boolean>] => {
+    const query = useMemo(() => model[queryType](options) as Q, [])
+    const ready = useMemo<Promise<Boolean>>(() => query.ready(), [])  // invoke at FIRST time query loaded
     useEffect(() => () => query.destroy(), [])
-    return [query, ready]
+    return [query as Query<InstanceType<M>>, ready]
 }
 export const useQuery = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    return makeQuery(model, QueryType.QUERY, options)
+    return makeQuery<M, Query<InstanceType<M>>>(model, QueryType.QUERY, options)
 }
 export const useQueryPage = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    return makeQuery(model, QueryType.QUERY_PAGE, options)
+    return makeQuery<M, QueryPage<InstanceType<M>>>(model, QueryType.QUERY_PAGE, options)
 }
 export const useQueryRaw = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    return makeQuery(model, QueryType.QUERY_RAW, options)
+    return makeQuery<M, QueryRaw<InstanceType<M>>>(model, QueryType.QUERY_RAW, options)
 }
 export const useQueryRawPage = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
-    return makeQuery(model, QueryType.QUERY_RAW_PAGE, options)
+    return makeQuery<M, QueryRawPage<InstanceType<M>>>(model, QueryType.QUERY_RAW_PAGE, options)
+}
+export const useQueryCacheSync = <M extends typeof Model>(model: M, options?: QueryProps<InstanceType<M>>) => {
+    return makeQuery<M, QueryCacheSync<InstanceType<M>>>(model, QueryType.QUERY_CACHE_SYNC, options)
 }
 
 export const useInput = <T>(
@@ -70,4 +76,19 @@ export const useModelForm = <T extends Model> (builder: ()=> ModelForm<T>) => {
     } , [])
     return form
 }
+
+export const useObject = <T extends Model> (asyncFunc: () => Promise<T>): [T|undefined, boolean] => { 
+    const [object, setObject] = useState<T | undefined>(undefined)
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        const waitObj = async () => {
+            const obj: T = await asyncFunc()
+            setObject(obj)
+            setLoading(false)
+        }
+        waitObj()
+    }, [])
+    return [object, loading] 
+}
+
 

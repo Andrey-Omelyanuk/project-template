@@ -5,11 +5,12 @@ import { Page } from '@/components/core/Page'
 import { Course } from '@/models/course'
 import { useObjectInput, useQuery } from '@/utils'
 import CourseList from '@/components/course/course/CourseList'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 
-const CoursesPage = observer(() => {
+const CoursesXPage = observer(() => {
     const navigate = useNavigate()
+    const params = useParams()
     const [courses, ready] = useQuery(Course, {
         autoupdate: true,
         relations: ArrayStringInput({value: ['chapters.lessons.blocks', ]}),
@@ -25,10 +26,10 @@ const CoursesPage = observer(() => {
 
     return (
         <Page>
-            <div> Courses </div>
-            <CourseList courseInput={courseInput} />
+            <div> Courses {params.course_id} </div>
+            { params.course_id === undefined && <CourseList courseInput={courseInput} />}
         </Page>
     )
 })
 
-export default CoursesPage
+export default CoursesXPage

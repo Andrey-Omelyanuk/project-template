@@ -10,7 +10,7 @@ const menu : TreeNodeInfo[] = [
     { id: '/'       , label: 'Dashboard'        , icon: IconNames.DASHBOARD },
     { id: '/users'  , label: 'Users'            , icon: IconNames.USER},
     { id: '/orgs'   , label: 'Organizations'    , icon: IconNames.GROUP_ITEM},
-    { id: '/courses', label: 'Courses'          , icon: IconNames.COLUMN_LAYOUT},
+    { id: '/course' , label: 'Courses'          , icon: IconNames.COLUMN_LAYOUT},
 ] 
 
 type NodePath = number[]
@@ -26,8 +26,13 @@ const Sidebar = observer((props: LeftSidebarProps) => {
     const location = useLocation()
     useEffect(() => {
         for (const item of menu) {
-            item.isSelected = item.id === location.pathname 
-            setNeedUpdate(!needUpdate)
+            if (item.id !== '/') {
+                item.isSelected = location.pathname.startsWith(item.id+'')
+            }
+            else {
+                item.isSelected = location.pathname === '/'
+            }
+            setNeedUpdate(!needUpdate)  // rerender the component
         } 
     }, [location])
     const handleNodeClick = useCallback(

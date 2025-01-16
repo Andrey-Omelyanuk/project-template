@@ -17,8 +17,13 @@ import Welcome from './components/core/Welcome.tsx'
 const BaseLayout        = lazy(() => import('./pages/app/layout.tsx'))
 const DashboardPage     = lazy(() => import('./pages/app/dashboard.tsx'))
 const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
-const CoursesPage       = lazy(() => import('./pages/app/courses.tsx'))
-const CoursePage        = lazy(() => import('./pages/app/course.tsx'))
+// Course
+const BaseCoursePage = lazy(() => import('./pages/app/course/base.tsx'))
+const CoursesPage    = lazy(() => import('./pages/app/course/courses.tsx'))
+const CoursePage     = lazy(() => import('./pages/app/course/course.tsx'))
+const ChapterPage    = lazy(() => import('./pages/app/course/chapter.tsx'))
+const LessonPage     = lazy(() => import('./pages/app/course/lesson.tsx'))
+// 
 const UsersPage         = lazy(() => import('./pages/app/users.tsx'))
 const UserProfilePage   = lazy(() => import('./pages/app/user-profile.tsx'))
 const root = document.getElementById('root')
@@ -51,8 +56,14 @@ ReactDOM.createRoot(root).render(
                     <Route path='users'    element={<UsersPage/>}/>
                     <Route path='orgs'     element={<OrgsPage/>}/>
                     <Route path='org/:org' element={<OrgPage/>}/>
-                    <Route path='courses'  element={<CoursesPage/>}/>
-                    <Route path='courses/:course' element={<CoursePage/>}/>
+                    {/* Course */}
+                    <Route path='course' element={<BaseCoursePage/>}>
+                        <Route index element={<CoursesPage/>}/>
+                        <Route path=':id' element={<CoursePage/>}/>
+                        <Route path='chapter/:id' element={<ChapterPage/>}/>
+                        <Route path='lesson/:id' element={<LessonPage/>}/>
+                    </Route>
+                    {/* Profile */}
                     <Route path='profile'  element={<UserProfilePage/>}/>
                 </Route>
             </Route>
