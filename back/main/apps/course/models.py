@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.db.models import CASCADE, BooleanField, CharField, DateTimeField, \
+from django.db.models import CASCADE, DO_NOTHING, BooleanField, CharField, DateTimeField, \
     ForeignKey, IntegerChoices, Model, PositiveSmallIntegerField, TextField
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
+from apps.files.models import File
 User = get_user_model()
 
 
@@ -94,7 +95,7 @@ class LessonBlock(Model):
     type        = PositiveSmallIntegerField(choices=Type.choices, default=Type.TEXT)
     title       = CharField(max_length=512, null=True, blank=True)
     text        = TextField(null=True, blank=True)
-    # file
+    file        = ForeignKey(File, on_delete=DO_NOTHING, null=True, blank=True)
 
     history = HistoricalRecords()
 

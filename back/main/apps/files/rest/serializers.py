@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework.serializers import PrimaryKeyRelatedField
+from rest_framework.serializers import PrimaryKeyRelatedField, SerializerMethodField
 from apps.core.rest.serializers import CoreModelSerializer
 from ..models import *
 User = get_user_model()
@@ -25,7 +25,9 @@ class FileSerializer(CoreModelSerializer):
 
 class FileVersionSerializer(CoreModelSerializer):
     original_id = PrimaryKeyRelatedField(source='original',  queryset=File.objects.all())
+    # I need to return presigned url here
+    # presigned_url = SerializerMethodField()
+
     class Meta:
         model = FileVersion
         exclude = ('original', )
-

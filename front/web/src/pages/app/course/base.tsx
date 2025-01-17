@@ -10,7 +10,7 @@ export const CourseContext = createContext<Query<Course>>(null)
 const BaseCoursePage = () => {
     const [courses, ready] = useQuery(Course, {
         autoupdate: true,  // TODO MobX-ORM: make it true by default
-        relations: ArrayStringInput({value: ['chapters.lessons.blocks', ]}),
+        relations: ArrayStringInput({value: ['chapters.lessons.blocks.file.versions', ]}),
     })
     use(ready)
 

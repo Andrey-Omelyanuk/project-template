@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import PrimaryKeyRelatedField
 from apps.core.rest.serializers import CoreModelSerializer
+from apps.files.models import File
 from ..models import *
 User = get_user_model()
 
@@ -60,9 +61,13 @@ class LessonSerializer(CoreModelSerializer):
 
 class LessonBlockSerializer(CoreModelSerializer):
     lesson_id  = PrimaryKeyRelatedField(source='lesson', queryset=Lesson.objects.all())
+    file_id   = PrimaryKeyRelatedField(source='file', queryset=File.objects.all())
     class Meta:
         model = LessonBlock
-        exclude = ('lesson', ) 
+        exclude = ('lesson', 'file')
+        expandable_fields = {
+            'file':  'apps.files.rest.FileSerializer',
+        }
 
 
 class LessonUserStatusSerializer(CoreModelSerializer):

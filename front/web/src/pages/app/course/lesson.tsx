@@ -21,7 +21,14 @@ const LessonPage = observer(() => {
                     <div>{block.type}</div>
                     <div>{block.title}</div>
                     <div>{block.text}</div>
-                    <div>{block.file}</div>
+                    <div> Files:  type {block.file?.type}
+                        {block.file?.versions.map((version) => (
+                            <div key={version.id}>
+                                <div>{version.slug}</div>
+                                <div>{version.file}</div>
+                            </div>
+                        ))}
+                    </div>
                 </Card>
             ))}
 

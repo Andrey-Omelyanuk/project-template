@@ -2,7 +2,6 @@
 import { useMemo, useEffect, useState } from 'react'
 import { Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs, ObjectForm, Input, Query, QueryPage, QueryRaw, QueryRawPage, QueryCacheSync } from 'mobx-orm'
 import { ModelForm } from './form'
-import { wait } from '@testing-library/user-event/dist/cjs/utils/index.js'
 
 /**
  *  Hooks for uging mobx-orm inputs and queries

@@ -1,6 +1,7 @@
 import { Model, model, field, foreign, many } from 'mobx-orm'
 import { api } from '@/services/http-adapter'
 import { Lesson } from './Lesson'
+import { File } from '../files'
 
 
 export enum LessonBlockType {
@@ -18,9 +19,10 @@ export class LessonBlock extends Model {
     @field type         ?: LessonBlockType
     @field title        ?: string
     @field text         ?: string
-    @field file         ?: string
+    @field file_id      ?: number 
 
     @foreign(Lesson) readonly lesson: Lesson
+    @foreign(File)   readonly file  : File 
 }
 
 many(LessonBlock, 'lesson_id')(Lesson, 'blocks')

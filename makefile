@@ -31,7 +31,7 @@ init:
 		then cp  ./utils/nginx.conf.example ./proxy/nginx.conf;  fi
 build:
 	export DOCKER_BUILDKIT=1 && \
-	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build --parallel
+	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) build
 run:
 	docker compose -p $(PROJECT_NAME) -f $(DOCKER_COMPOSE_FILE) up
 stop:

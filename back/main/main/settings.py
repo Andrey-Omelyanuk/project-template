@@ -1,4 +1,6 @@
 import os, sys
+from typing import List, Tuple
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,13 +41,26 @@ CENTRIFUGO_HTTP_API_ENDPOINT = os.getenv('CENTRIFUGO_HTTP_API_ENDPOINT')
 CENTRIFUGO_TOKEN_SECRET      = os.getenv('CENTRIFUGO_TOKEN_SECRET')
 CENTRIFUGO_HTTP_API_KEY      = os.getenv('CENTRIFUGO_HTTP_API_KEY')
 
-S3_ACCESS_KEY_ID        = os.environ['S3_ACCESS_KEY_ID']
-S3_SECRET_ACCESS_KEY    = os.environ['S3_SECRET_ACCESS_KEY']
-S3_ENDPOINT_URL         = os.environ['S3_ENDPOINT_URL']
-S3_BUCKET_NAME          = os.environ['S3_BUCKET_NAME']
-S3_PUBLIC_SCHEMA        = os.getenv('S3_PUBLIC_SCHEMA', 'http')
-S3_PUBLIC_DOMAIN        = os.getenv('S3_PUBLIC_DOMAIN', 's3.localhost')
-S3_SCANNER_FORLDER      = os.getenv('S3_RESULT_FORLDER', '/scan-sessions/')
+MINIO_CONSISTENCY_CHECK_ON_START = False
+MINIO_BUCKET_CHECK_ON_SAVE = True
+MINIO_ENDPOINT = os.environ['S3_ENDPOINT_URL']
+MINIO_EXTERNAL_ENDPOINT = os.environ['S3_EXTERNAL_ENDPOINT_URL']
+MINIO_EXTERNAL_ENDPOINT_USE_HTTPS = False  # TODO: Set to True in production
+# MINIO_REGION = 'us-east-1'  # Default is set to None
+MINIO_ACCESS_KEY = os.environ['S3_ACCESS_KEY_ID']
+MINIO_SECRET_KEY = os.environ['S3_SECRET_ACCESS_KEY']
+MINIO_USE_HTTPS = False  # internal communication with MinIO server is not encrypted
+MINIO_URL_EXPIRY_HOURS = timedelta(days=1)  # Default is 7 days (longest) if not defined
+MINIO_PRIVATE_BUCKETS = [
+    'main',
+]
+MINIO_PUBLIC_BUCKETS = [
+    'public',
+]
+MINIO_POLICY_HOOKS: List[Tuple[str, dict]] = []
+# MINIO_MEDIA_FILES_BUCKET = 'my-media-files-bucket'  # replacement for MEDIA_ROOT
+# MINIO_STATIC_FILES_BUCKET = 'my-static-files-bucket'  # replacement for STATIC_ROOT
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -60,6 +75,8 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'django_extensions',
+    # 'django_minio_backend',
+    'django_minio_backend.apps.DjangoMinioBackendConfig',
     'mptt',
     'rest_framework',
     # 'rest_framework_simplejwt',
@@ -147,15 +164,7 @@ STATIC_URL = '/back-static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # collectstatic will put files here
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
-        "OPTIONS": {
-            "endpoint_url"  : S3_ENDPOINT_URL,
-            "access_key"    : S3_ACCESS_KEY_ID, 
-            "secret_key"    : S3_SECRET_ACCESS_KEY, 
-            "bucket_name"   : S3_BUCKET_NAME, 
-            "custom_domain" : S3_PUBLIC_DOMAIN,
-            "url_protocol"  : S3_PUBLIC_SCHEMA,
-        },
+        "BACKEND": "django_minio_backend.models.MinioBackend",
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"

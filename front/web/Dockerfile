@@ -32,7 +32,6 @@ RUN --mount=type=cache,target=/root/.cache/apk \
     apk add nodejs npm neovim neovim-doc ripgrep build-base wget --update
 
 USER node 
-COPY --chown=app:app ./tmp/nvim /home/app/.config/nvim
 
 
 # -----------------------------------------------------------------------------
