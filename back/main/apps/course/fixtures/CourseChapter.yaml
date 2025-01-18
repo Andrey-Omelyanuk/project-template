@@ -1,0 +1,42 @@
+- model: course.coursechapter
+  pk: 1
+  fields:
+    course: 1
+    index: 0
+    title: Ch A1
+    desc: Some test for chapter "Ch A1"
+- model: course.coursechapter
+  pk: 2
+  fields:
+    course: 1
+    index: 1
+    title: Ch A2
+    desc: Some test for chapter "Ch A2"
+- model: course.coursechapter
+  pk: 3
+  fields:
+    course: 1
+    index: 2
+    title: Ch A3
+    desc: Some test for chapter "Ch A3"
+- model: course.coursechapter
+  pk: 4
+  fields:
+    course: 2
+    index: 0
+    title: Ch B1
+    desc: Some test for chapter "Ch B1"
+- model: course.coursechapter
+  pk: 5
+  fields:
+    course: 2
+    index: 1
+    title: Ch B2
+    desc: Some test for chapter "Ch B2"
+- model: course.coursechapter
+  pk: 6
+  fields:
+    course: 2
+    index: 2
+    title: Ch B3
+    desc: Some test for chapter "Ch B3"

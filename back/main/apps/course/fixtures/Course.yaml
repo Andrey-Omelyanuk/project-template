@@ -1,0 +1,30 @@
+- model: course.course
+  pk: 1
+  fields:
+    is_active: true
+    title: Test A
+    desc: Some desc for course "Test A"
+- model: course.course
+  pk: 2
+  fields:
+    is_active: true
+    title: Test B
+    desc: Some test for course "Test B"
+- model: course.course
+  pk: 3
+  fields:
+    is_active: true
+    title: Test C
+    desc: Some test for course "Test C"
+- model: course.course
+  pk: 4
+  fields:
+    is_active: true
+    title: Test D
+    desc: Some test for course "Test D"
+- model: course.course
+  pk: 5
+  fields:
+    is_active: true
+    title: Test E
+    desc: Some test for course "Test E"

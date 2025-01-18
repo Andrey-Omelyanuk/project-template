@@ -1,0 +1,36 @@
+- model: course.lessonblock
+  pk: 1
+  fields:
+    lesson: 1
+    index: 0
+    type: 1
+    title: Welcome
+    text: Some text that welcome the student.
+    file: null
+- model: course.lessonblock
+  pk: 2
+  fields:
+    lesson: 1
+    index: 1
+    type: 2
+    title: Some title for image
+    text: This is image block. Don't forget to attach file.
+    file: null
+- model: course.lessonblock
+  pk: 3
+  fields:
+    lesson: 1
+    index: 3
+    type: 3
+    title: Some title for audio.
+    text: This is audio block. Don't forget to attach file.
+    file: null
+- model: course.lessonblock
+  pk: 4
+  fields:
+    lesson: 1
+    index: 4
+    type: 1
+    title: Some title for video.
+    text: This is video block. Don't forget to attach file.
+    file: null

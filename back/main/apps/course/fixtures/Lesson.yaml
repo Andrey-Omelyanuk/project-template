@@ -1,0 +1,28 @@
+- model: course.lesson
+  pk: 1
+  fields:
+    chapter: 1
+    index: 0
+    title: A1L1
+    desc: Some text for A1L1
+- model: course.lesson
+  pk: 2
+  fields:
+    chapter: 1
+    index: 1
+    title: A1L2
+    desc: Some text for A1L2
+- model: course.lesson
+  pk: 3
+  fields:
+    chapter: 1
+    index: 2
+    title: A1L3
+    desc: Some text for A1L3
+- model: course.lesson
+  pk: 4
+  fields:
+    chapter: 2
+    index: 0
+    title: A2L1
+    desc: Some text for A2L1
