@@ -12,13 +12,7 @@ class FileViewSet(CoreModelViewSet):
     serializer_class = FileSerializer
 
     def get_queryset(self):
-        """ This endpoint return files only to owners. """
-        if self.request.user.is_staff:
-            return File.objects.all()
-        elif self.request.user:
-            return File.objects.all(uploaded_by=self.request.user)
-        else:
-            return None
+        return File.objects.filter(uploaded_by=self.request.user)
 
     def perform_create(self, serializer):
         """ Set the user who uploaded the file. """

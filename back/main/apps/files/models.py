@@ -24,12 +24,13 @@ class File(Model):
         AUDIO   = 2, _('Audio')
         VIDEO   = 3, _('Video')
 
+    title       = CharField(max_length=256 , null=True, blank=True, help_text='Title of the file. By default is original file name.')
+    description = CharField(max_length=1024, null=True, blank=True)
     uploaded_by = ForeignKey(User, on_delete=CASCADE)
     uploaded_at = DateTimeField(auto_now_add=True)
     type        = PositiveSmallIntegerField(choices=Type.choices, default=Type.UNKNOWN)
     file        = FileField(storage=MinioBackend(bucket_name='main'),
                             upload_to='original_files/')
-    original    = CharField(max_length=256, null=True, blank=True, help_text='Original file name.')
 
     def save(self, *args, **kwargs):
         # """ Save original file name and rename file to id. """
@@ -42,12 +43,10 @@ class File(Model):
         return f"{self.id} {self.file}"
 
 @receiver(post_save, sender=File)
-def process_video(sender, instance, **kwargs):
+def process_file(sender, instance, **kwargs):
     """ When file is uploaded, process it. """
-    from .tasks.video import process_video_task
-    if instance.type == File.Type.VIDEO:
-        process_video_task.delay(instance.id, '720p')
-        process_video_task.delay(instance.id, '1080p')
+    from .tasks import process_file_task
+    process_file_task.delay(instance.id)
 
 
 class FileVersion(Model):

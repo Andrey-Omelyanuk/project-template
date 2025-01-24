@@ -11,6 +11,7 @@ const menu : TreeNodeInfo[] = [
     { id: '/users'  , label: 'Users'            , icon: IconNames.USER},
     { id: '/orgs'   , label: 'Organizations'    , icon: IconNames.GROUP_ITEM},
     { id: '/course' , label: 'Courses'          , icon: IconNames.COLUMN_LAYOUT},
+    { id: '/files'  , label: 'Files'            , icon: IconNames.FILM},
 ] 
 
 type NodePath = number[]

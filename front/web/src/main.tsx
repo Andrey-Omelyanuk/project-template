@@ -17,6 +17,9 @@ import Welcome from './components/core/Welcome.tsx'
 const BaseLayout        = lazy(() => import('./pages/app/layout.tsx'))
 const DashboardPage     = lazy(() => import('./pages/app/dashboard.tsx'))
 const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
+const BaseFilePage      = lazy(() => import('./pages/app/file/base.tsx'))
+const FilesPage         = lazy(() => import('./pages/app/file/files.tsx'))
+const FilePage          = lazy(() => import('./pages/app/file/file.tsx'))
 // Course
 const BaseCoursePage = lazy(() => import('./pages/app/course/base.tsx'))
 const CoursesPage    = lazy(() => import('./pages/app/course/courses.tsx'))
@@ -52,16 +55,20 @@ ReactDOM.createRoot(root).render(
                         <BaseLayout/>
                     </Suspense>
                 )}>
-                    <Route index           element={<DashboardPage/>}/>
-                    <Route path='users'    element={<UsersPage/>}/>
-                    <Route path='orgs'     element={<OrgsPage/>}/>
-                    <Route path='org/:org' element={<OrgPage/>}/>
+                    <Route index            element={<DashboardPage/>}/>
+                    <Route path='users'     element={<UsersPage/>}/>
+                    <Route path='orgs'      element={<OrgsPage/>}/>
+                    <Route path='files'     element={<BaseFilePage/>}>
+                        <Route index        element={<FilesPage/>}/>
+                        <Route path=':id'   element={<FilePage/>}/>
+                    </Route>
+                    <Route path='org/:org'  element={<OrgPage/>}/>
                     {/* Course */}
                     <Route path='course' element={<BaseCoursePage/>}>
-                        <Route index element={<CoursesPage/>}/>
-                        <Route path=':id' element={<CoursePage/>}/>
-                        <Route path='chapter/:id' element={<ChapterPage/>}/>
-                        <Route path='lesson/:id' element={<LessonPage/>}/>
+                        <Route index                element={<CoursesPage/>}/>
+                        <Route path=':id'           element={<CoursePage/>}/>
+                        <Route path='chapter/:id'   element={<ChapterPage/>}/>
+                        <Route path='lesson/:id'    element={<LessonPage/>}/>
                     </Route>
                     {/* Profile */}
                     <Route path='profile'  element={<UserProfilePage/>}/>
