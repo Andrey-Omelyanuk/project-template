@@ -51,4 +51,11 @@ export class File extends Model {
         }
         return qualityList
     }
+
+    getThumbnail() : FileVersion {
+        return this.versions.find(version => version.slug === 'thumbnail')
+    }
+    getPreview() : FileVersion {
+        return this.versions.find(version => version.slug === 'preview')
+    }
 }

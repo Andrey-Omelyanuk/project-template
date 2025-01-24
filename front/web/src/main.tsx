@@ -17,7 +17,6 @@ import Welcome from './components/core/Welcome.tsx'
 const BaseLayout        = lazy(() => import('./pages/app/layout.tsx'))
 const DashboardPage     = lazy(() => import('./pages/app/dashboard.tsx'))
 const OrgsPage          = lazy(() => import('./pages/app/orgs.tsx'))
-const BaseFilePage      = lazy(() => import('./pages/app/file/base.tsx'))
 const FilesPage         = lazy(() => import('./pages/app/file/files.tsx'))
 const FilePage          = lazy(() => import('./pages/app/file/file.tsx'))
 // Course
@@ -58,7 +57,7 @@ ReactDOM.createRoot(root).render(
                     <Route index            element={<DashboardPage/>}/>
                     <Route path='users'     element={<UsersPage/>}/>
                     <Route path='orgs'      element={<OrgsPage/>}/>
-                    <Route path='files'     element={<BaseFilePage/>}>
+                    <Route path='files'>
                         <Route index        element={<FilesPage/>}/>
                         <Route path=':id'   element={<FilePage/>}/>
                     </Route>

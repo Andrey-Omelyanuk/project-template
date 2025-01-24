@@ -1,7 +1,7 @@
 import { use } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useQuery } from '@/utils'
-import { ArrayStringInput } from 'mobx-orm'
+import { ArrayStringInput, DESC, OrderByInput } from 'mobx-orm'
 import { File } from '@/models/files'
 import FileCard from '@/components/files/FileCard'
 import { Link } from 'react-router'
@@ -11,6 +11,7 @@ const FilesPage = observer(() => {
 
     const [files, ready] = useQuery(File, { 
         relations: ArrayStringInput({value: ['versions', ]}),
+        orderBy: OrderByInput({value: new Map([['uploaded_at', DESC]])}),
         autoupdate: true,
     })
     use(ready)  // page is ready if orgs are loaded

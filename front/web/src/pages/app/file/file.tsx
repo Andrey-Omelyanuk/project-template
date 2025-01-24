@@ -1,49 +1,63 @@
-import { observer } from 'mobx-react-lite'
-import { File, FileType } from '@/models/files'
+import { use, useMemo } from 'react'
 import { useParams } from 'react-router'
+import { observer } from 'mobx-react-lite'
+import { Button, Card, CardList, Icon, Intent, Section, SectionCard, Tooltip } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
+import { File, FileType } from '@/models/files'
 import VideoPlayer from '@/components/files/VideoPlayer'
-import { useMemo } from 'react'
+import { useInput, useObjectInput, useQuery } from '@/utils'
+import { ArrayStringInput, DESC, EQ, NumberInput, ObjectInput, OrderByInput } from 'mobx-orm'
 
 
 const FilePage = observer(() => {
     const params = useParams()
-    const id = parseInt(params.id)
-    const file = File.get(id) as File  // BaseFilePage has preloaded all files
+    const idInput = useInput(NumberInput, { value: parseInt(params.id) })
+    const [files, ready] = useQuery(File, {
+        autoupdate: true,
+        filter: EQ('id', idInput),
+        relations: ArrayStringInput({value: ['versions', ]}),
+    })
+    use(ready)
+    const file = useMemo(() => files.items[0], [files.items]) 
+
     if (!file) {
         return <div>File not found</div>
     }
     
     return (
         <div className='p-4'>
-            <div className='text-2xl font-bold'>
+            {file.type === FileType.VIDEO && <VideoPlayer file={file}/>}
+            <div className='text-2xl font-bold mt-2'>
                 {file?.title}
             </div>
-            <div className='text-gray-500'>
+            <p className='text-gray-500'>
                 {file?.description}
-            </div>
-            {file.type === FileType.VIDEO && <VideoPlayer file={file}/>}
-            <button className='p-2 mt-4 bg-blue-500 text-white rounded-md'>
-                Download All
-            </button>
-            <button className='p-2 mt-4 bg-blue-500 text-white rounded-md'>
-                Rebuild All
-            </button>
-            <div className='text-lg font-bold mt-4'>
-                Versions
-            </div>
-            { file.versions.map((version) => (
-                <div key={version.id} className='mt-4'>
-                    <div className='text-lg font-bold'>
-                        {version.slug}
-                    </div>
-                    <button className='p-2 mt-4 bg-blue-500 text-white rounded-md'>
-                        Download
-                    </button>
-                    <button className='p-2 mt-4 bg-blue-500 text-white rounded-md'>
-                        Rebuild
-                    </button>
-                </div>
-            ))}
+            </p>
+
+            <Section title="Versions"  rightElement={<>
+                    <Button text='Rebuild All' minimal={true} intent={Intent.WARNING} icon={IconNames.REPEAT} />
+                    <Button text='Download All' minimal={true} intent={Intent.PRIMARY} icon={IconNames.ARCHIVE} />
+                </>}>
+                <SectionCard padded={false}>
+                    <CardList compact={true}>
+                        {file.versions.map((version) => (
+                            <Card key={version.id}>
+                                <span className='flex-auto'>{version.slug}</span>
+                                <Tooltip content="Rebuild">
+                                    <Button minimal={true} intent={Intent.WARNING} icon={IconNames.REPEAT} />
+                                </Tooltip>
+                                <Tooltip content="Download">
+                                    <Button minimal={true} intent={Intent.PRIMARY} icon={IconNames.ARCHIVE} />
+                                </Tooltip>
+                            </Card>
+                        ))}
+
+                    </CardList>
+                </SectionCard>
+            </Section>
+            <Card>
+                <Button text='Delete All' intent={Intent.DANGER} icon={IconNames.TRASH} />
+            </Card>
         </div>
     )
 })
