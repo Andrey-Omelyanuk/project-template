@@ -1,6 +1,6 @@
 import { Suspense, use } from 'react'
 import { Outlet } from 'react-router-dom'
-import { EQ, NumberInput, Query, timeout } from 'mobx-orm'
+import { EQ, Input, NUMBER, Query, timeout } from 'mobx-orm'
 import me from '@/services/me' 
 import useMobX_ORM from '@/utils/useMobX_ORM'
 import { User } from '@/models/core'
@@ -9,13 +9,14 @@ import { ThemeContext, useTheme } from '@/services/theme'
 import LeftSidebar from '@/components/core/Sidebar/Sidebar'
 import TopNavBar from '@/components/core/TopNavBar'
 
+
 const init = async () => {
     const preload  = [timeout(1000), ] // stay on loading screen for 1s for remove flicker 
     await me.init()
     if (me.user_id !== null && me.user_id !== undefined) {
         // await pub_sub.init()
         const userQuery = User.getQuery({
-            filter: EQ('id', NumberInput({value: me.user_id})),
+            filter: EQ('id', new Input(NUMBER(), { value: me.user_id})),
             autoupdate: true
         }) as Query<User>
         preload.push(userQuery.ready())

@@ -6,16 +6,17 @@ import { IconNames } from '@blueprintjs/icons'
 import { File, FileType } from '@/models/files'
 import VideoPlayer from '@/components/files/VideoPlayer'
 import { useInput, useObjectInput, useQuery } from '@/utils'
-import { ArrayStringInput, DESC, EQ, NumberInput, ObjectInput, OrderByInput } from 'mobx-orm'
+import { Input, ARRAY, STRING, NUMBER, ORDER_BY, DESC, EQ, ObjectInput } from 'mobx-orm'
 
 
 const FilePage = observer(() => {
     const params = useParams()
-    const idInput = useInput(NumberInput, { value: parseInt(params.id) })
+    const idInput = useInput(NUMBER(), { value: parseInt(params.id) }) as Input<number>
+    const relations = useInput(ARRAY(STRING()), { value: ['versions'] }) as Input<string[]>
     const [files, ready] = useQuery(File, {
         autoupdate: true,
         filter: EQ('id', idInput),
-        relations: ArrayStringInput({value: ['versions', ]}),
+        relations,
     })
     use(ready)
     const file = useMemo(() => files.items[0], [files.items]) 

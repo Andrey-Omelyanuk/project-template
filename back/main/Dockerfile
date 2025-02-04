@@ -8,17 +8,21 @@ RUN --mount=type=cache,target=/root/.cache/apk \
     apk update && apk upgrade && \
     # base dependencies
     apk add --no-cache curl gcc \
-    # video dependencies 
+    # video dependencies
     # TODO: move it to separate image of video-worker
     ffmpeg && \
     # clean up
     rm -rf /var/cache/apk/*
 
-# Create a group and user for the app
-RUN addgroup -g 1000 -S app && adduser -u 1000 -S app -G app 
+RUN 
 
-# app dependencies
+# Create a group and user for the app
+RUN addgroup -g 1000 -S app && adduser -u 1000 -S app -G app
+
 WORKDIR /home/app/code
+
+# 
+# Install application dependencies
 COPY ./requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip && \
@@ -27,6 +31,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # ------------------------------------------------------------------------------
 FROM base AS dev
 
+# Install development tools and dependencies
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk add --no-cache musl-dev python3-dev linux-headers git
 
@@ -49,6 +54,7 @@ ENV PYTHONUNBUFFERED 1
 FROM dev AS dev-nvim 
 ARG HOST_HOME
 
+# Install additional development tools and dependencies for Neovim
 RUN --mount=type=cache,target=/root/.cache/apk \
     apk add --no-cache nodejs npm neovim neovim-doc ripgrep build-base wget --update
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -61,3 +67,4 @@ USER app
 # FROM base AS prod
 # RUN pip install -Iv gunicorn==20.1.0
 # COPY . .
+

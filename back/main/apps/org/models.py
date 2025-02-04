@@ -40,6 +40,8 @@ class Org(Model):
     def __str__(self):
         return f"{self.name}"
 
+Org.objects.filter(is_active=True).order_by('name')
+# SELECT * FROM org_org WHERE is_active = True ORDER BY name
 
 class OrgUser(Model):
     """ User in Organization """ 
@@ -101,3 +103,4 @@ class OrgUserInOrgUserGroup(Model):
 
     class Meta:
         unique_together = (('org_user_group', 'org_user'), )
+

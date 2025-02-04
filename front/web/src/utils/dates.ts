@@ -10,9 +10,11 @@ export const dtf = (datetime: string): string => {
 }
 
 export const tf = (datetime: string): string => {
+    if (!datetime) return ""
     return format(new Date(datetime), TIME_FORMAT)
 }
 
 export const df = (datetime: string): string => {
+    if (!datetime) return ""
     return format(new Date(datetime), DATE_FORMAT)
 }

@@ -9,17 +9,17 @@ import OrgCreate from '@/components/org/org/OrgCreate'
 
 const OrgPage = observer(() => {
 
-    const [orgs, ready] = useQueryPage(Org, {
-        autoupdate: true
-    }) as [QueryPage<Org>, Promise<void>]
-    use(ready)
+    // const [orgs, ready] = useQueryPage(Org, {
+    //     autoupdate: true
+    // }) as [QueryPage<Org>, Promise<void>]
+    // use(ready)
     
     return (
         <>
-            <OrgList orgs={orgs}/>
-            <div className='m-4'>
+            {/* <OrgList orgs={orgs}/> */}
+            {/* <div className='m-4'>
                 <OrgCreate onCreated={() => orgs.load()}/>
-            </div>
+            </div> */}
         </>
     )
 })

@@ -1,19 +1,19 @@
-import { DateInput } from 'mobx-orm'
+import { Input, DATE } from 'mobx-orm'
 import { DateRangeInput3 } from '@blueprintjs/datetime2'
 import { observer } from 'mobx-react-lite'
 
 
 export interface DateRangeInputProps {
-    start   ?: DateInput 
-    end     ?: DateInput 
+    start   ?: Input<Date>
+    end     ?: Input<Date> 
 }
 
 
 // The component is not finished, it is just a placeholder
 export const DateRangeInput = observer((props: DateRangeInputProps) => {
     const { 
-        start = new DateInput({}), 
-        end = new DateInput({}),
+        start = new Input(DATE()), 
+        end = new Input(DATE()),
     } = props
 
     const handleRangeChange = (range: [Date, Date]) => {

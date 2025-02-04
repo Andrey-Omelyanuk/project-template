@@ -96,6 +96,7 @@ export class HttpAdapter<M extends Model> extends Adapter<M> {
             { signal: controller?.signal },
         )
         // await timeout(2000) 
+        debugger
         return response.data
     }
 

@@ -15,6 +15,7 @@ export interface StringInputViewProps {
 export const StringInputView = observer((props: StringInputViewProps) => {
     const { input, disabled = false, label, placeholder, onPressEnter, autoFocus } = props
 
+    console.log('test', input.value)
     const onChange = (value: string) => {
         input.set(value)
     }
@@ -31,7 +32,8 @@ export const StringInputView = observer((props: StringInputViewProps) => {
                 {label}
                 <InputGroup
                     autoFocus={autoFocus}
-                    value={input.value}
+                    // TODO: is it make sense to move it into StringInput of MobxORM?
+                    value={input.value === undefined || input.value === null ? '' : input.value }
                     onValueChange={onChange}
                     placeholder={placeholder}
                     onKeyDown={handleKeyDown}
@@ -42,7 +44,7 @@ export const StringInputView = observer((props: StringInputViewProps) => {
     } else {
         return (
             <InputGroup
-                value={input.value}
+                value={input.value === undefined || input.value === null ? '' : input.value }
                 onValueChange={onChange}
                 placeholder={placeholder}
                 onKeyDown={handleKeyDown}

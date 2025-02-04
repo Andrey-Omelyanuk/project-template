@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { Page } from '@/components/core/Page'
 import { useObjectInput, useQuery, useQueryPage } from '@/utils'
 import { Org, OrgUserGroup, OrgUserInOrgUserGroup } from '@/models/org'
-import { ArrayStringInput, ASC, autoResetId, EQ, ObjectInput, OrderByInput, QueryPage } from 'mobx-orm'
+import { Input, ARRAY, STRING, NUMBER, ORDER_BY, ASC, autoResetId, EQ, ObjectInput, QueryPage } from 'mobx-orm'
 import OrgList from '@/components/org/org/OrgList'
 import OrgCreate from '@/components/org/org/OrgCreate'
 import OrgUserGroupTree from '@/components/org/org-user-group/OrgUserGroupTree'
@@ -13,7 +13,7 @@ import OrgUserInOrgUserGroupCreate from '@/components/org/org-user-in-org-user-g
 
 const OrgsPage = observer(() => {
 
-    const [orgs, ready] = useQuery(Org, { autoupdate: true, }) as [QueryPage<Org>, Promise<void>]
+    const [orgs, ready] = useQuery(Org, { autoupdate: true, })
     const orgInput = useObjectInput(ObjectInput, {
         syncURL: 'org',
         required: true,
@@ -24,9 +24,9 @@ const OrgsPage = observer(() => {
 
     const [groups, ] = useQuery(OrgUserGroup, {
         filter: EQ('org_id', orgInput),
-        orderBy: OrderByInput({value: new Map([['level', ASC]])}),
+        orderBy: new Input(ARRAY(ORDER_BY()), {value: new Map([['level', ASC]])}),
         autoupdate: true,
-    }) as [QueryPage<OrgUserGroup>, Promise<void>]
+    })
     const groupInput = useObjectInput(ObjectInput, {
         syncURL: 'group',
         required: true,
@@ -36,9 +36,9 @@ const OrgsPage = observer(() => {
 
     const [groupUsers, ] = useQuery(OrgUserInOrgUserGroup, {
         filter: EQ('org_user_group_id', groupInput),
-        relations: ArrayStringInput({value: ['org_user.user', ]}),
+        relations: new Input(ARRAY(STRING()), {value: ['org_user.user', ]}),
         autoupdate: true,
-    }) as [QueryPage<OrgUserGroup>, Promise<void>]
+    })
     const userInput = useObjectInput(ObjectInput, {
         syncURL: 'user',
         required: true,

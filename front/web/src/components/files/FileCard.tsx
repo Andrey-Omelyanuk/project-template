@@ -3,6 +3,7 @@ import { File } from '@/models/files'
 import { useMemo, useState } from 'react'
 import { Card } from '@blueprintjs/core'
 
+
 const FileCard = ({ file }: { file: File }) => {
     const thumbnail = useMemo(() => file.getThumbnail(), [file])
     const preview = useMemo(() => file.getPreview(), [file])

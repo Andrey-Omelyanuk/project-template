@@ -1,5 +1,5 @@
 import { Button, ControlGroup } from '@blueprintjs/core'
-import { StringInput } from 'mobx-orm'
+import { Input, STRING } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
 import { Org } from '@/models/org'
 import { ModelForm } from '@/utils/form'
@@ -16,7 +16,7 @@ const OrgCreate = observer((props: OrgCreateProps) => {
     const form = useModelForm(() => {
         const form = new ModelForm<Org>()
         const obj = new Org()
-        form.inputs['name'] = StringInput({value: obj.name})
+        form.inputs['name'] = new Input(STRING(), {value: obj.name})
         form.setObj(obj)
         return form
     })

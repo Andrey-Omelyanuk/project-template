@@ -1,8 +1,4 @@
-import { Card, CardList, Section, SectionCard } from '@blueprintjs/core'
-import { QueryPage, NumberInput as NumberModelInput } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
-import { Org } from '@/models/org'
-import { useInput } from '@/utils'
 
 
 export interface OrgDetailsProps {

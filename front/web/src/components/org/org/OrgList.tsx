@@ -1,12 +1,12 @@
 import { Card, CardList, Section, SectionCard } from '@blueprintjs/core'
-import { QueryPage, Input, ObjectInput } from 'mobx-orm'
+import { QueryPage, Input, ObjectInput, NumberDescriptor } from 'mobx-orm'
 import { observer } from 'mobx-react-lite'
 import { Org } from '@/models/org'
 import { DeleteObjectButton } from '@/components/core/inputs/DeleteObjectButton'
 
 
 export interface OrgListProps {
-    orgInput: ObjectInput<Org>
+    orgInput: ObjectInput<number, Org>
 }
 
 const OrgList = observer((props: OrgListProps) => {

@@ -1,6 +1,11 @@
 /* eslint react-hooks/exhaustive-deps: 0 */ 
 import { useMemo, useEffect, useState } from 'react'
-import { Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs, ObjectForm, Input, Query, QueryPage, QueryRaw, QueryRawPage, QueryCacheSync } from 'mobx-orm'
+import {
+    Model, QueryProps, InputConstructorArgs, ObjectInputConstructorArgs,
+    Input, Query, QueryPage, QueryRaw, QueryRawPage, QueryCacheSync,
+    TypeDescriptor,
+    TypeDescriptorProps
+} from 'mobx-orm'
 import { ModelForm } from './form'
 
 /**
@@ -38,19 +43,23 @@ export const useQueryCacheSync = <M extends typeof Model>(model: M, options?: Qu
     return makeQuery<M, QueryCacheSync<InstanceType<M>>>(model, QueryType.QUERY_CACHE_SYNC, options)
 }
 
-export const useInput = <T>(
-    InputConstructor: (args?: InputConstructorArgs<T>) => Input<T>,
-    options?: InputConstructorArgs<T>,
+// export function NUMBER(props?: NumberDescriptorProps) {
+//     return new NumberDescriptor(props)
+// }
+
+export const useInput = <X, T extends TypeDescriptor<X>, I extends InputConstructorArgs<X>>(
+    type: T,
+    options?: I,
     reset?: Boolean
-) => {
-    const input = useMemo(() => InputConstructor(options), [])
+): Input<X> => {
+    const input = useMemo(() => new Input(type, options), [])
     useEffect(() => {
         return () => {
             if (reset) input.set(undefined)
             input.destroy()
         }
     } , [])
-    return input
+    return input as Input<X>
 }
 
 export const useObjectInput = (
